@@ -15,6 +15,8 @@ import GeneColumnFormatter from "./column/GeneColumnFormatter";
 import ChromosomeColumnFormatter from "./column/ChromosomeColumnFormatter";
 import ProteinChangeColumnFormatter from "./column/ProteinChangeColumnFormatter";
 import MutationTypeColumnFormatter from "./column/MutationTypeColumnFormatter";
+import ClonalColumnFormatter from "./column/ClonalColumnFormatter";
+import MutantCopiesColumnFormatter from "./column/MutantCopiesColumnFormatter";
 import FunctionalImpactColumnFormatter from "./column/FunctionalImpactColumnFormatter";
 import CosmicColumnFormatter from "./column/CosmicColumnFormatter";
 import MutationCountColumnFormatter from "./column/MutationCountColumnFormatter";
@@ -100,6 +102,8 @@ export enum MutationTableColumnType {
     MUTATION_STATUS,
     VALIDATION_STATUS,
     MUTATION_TYPE,
+    CLONAL,
+    MUTANT_COPIES,
     CENTER,
     TUMOR_ALLELE_FREQ,
     NORMAL_ALLELE_FREQ,
@@ -405,12 +409,28 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
         };
 
         this._columns[MutationTableColumnType.MUTATION_TYPE] = {
-            name: "Mutation Type",
+            name: "Test Mutation Type",
             render:MutationTypeColumnFormatter.renderFunction,
             download:MutationTypeColumnFormatter.getTextValue,
             sortBy:(d:Mutation[])=>MutationTypeColumnFormatter.getDisplayValue(d),
             filter:(d:Mutation[], filterString:string, filterStringUpper:string) =>
                 MutationTypeColumnFormatter.getDisplayValue(d).toUpperCase().indexOf(filterStringUpper) > -1
+        };
+
+        this._columns[MutationTableColumnType.CLONAL] = {
+            name: "Clonal",
+            render:ClonalColumnFormatter.renderFunction,
+            download:ClonalColumnFormatter.getClonalValue,
+            sortBy:(d:Mutation[])=>ClonalColumnFormatter.getDisplayValue(d),
+            filter:(d:Mutation[], filterString:string, filterStringUpper:string) =>
+                ClonalColumnFormatter.getDisplayValue(d).toUpperCase().indexOf(filterStringUpper) > -1
+        };
+
+        this._columns[MutationTableColumnType.MUTANT_COPIES] = {
+            name: "Mutant Copies",
+            render:MutantCopiesColumnFormatter.renderFunction,
+            download:MutantCopiesColumnFormatter.getDisplayValue,
+            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValue(d)
         };
 
         this._columns[MutationTableColumnType.FUNCTIONAL_IMPACT] = {

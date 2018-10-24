@@ -40,6 +40,8 @@ export default class ResultsViewMutationTable extends MutationTable<IResultsView
             MutationTableColumnType.CHROMOSOME,
             MutationTableColumnType.PROTEIN_CHANGE,
             MutationTableColumnType.MUTATION_TYPE,
+            MutationTableColumnType.CLONAL,
+            MutationTableColumnType.MUTANT_COPIES,
             MutationTableColumnType.COSMIC,
             MutationTableColumnType.TUMOR_ALLELE_FREQ,
             MutationTableColumnType.NORMAL_ALLELE_FREQ,
@@ -70,6 +72,8 @@ export default class ResultsViewMutationTable extends MutationTable<IResultsView
         this._columns[MutationTableColumnType.ANNOTATION].order = 30;
         this._columns[MutationTableColumnType.FUNCTIONAL_IMPACT].order = 38;
         this._columns[MutationTableColumnType.MUTATION_TYPE].order = 40;
+        this._columns[MutationTableColumnType.CLONAL].order = 45;
+        this._columns[MutationTableColumnType.MUTANT_COPIES].order = 47;
         this._columns[MutationTableColumnType.COPY_NUM].order = 50;
         this._columns[MutationTableColumnType.COSMIC].order = 60;
         this._columns[MutationTableColumnType.MUTATION_STATUS].order = 70;
