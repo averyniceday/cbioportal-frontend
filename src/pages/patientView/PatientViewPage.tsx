@@ -883,6 +883,9 @@ export default class PatientViewPage extends React.Component<
                                         this.patientViewPageStore
                                             .sampleToMutationGenePanelId
                                             .isComplete &&
+                                        this.patientViewPageStore
+                                            .clinicalDataGroupedBySampleMap
+                                            .isComplete &&
                                         !!sampleManager && (
                                             <div data-test="patientview-mutation-table">
                                                 <PatientViewMutationTable
@@ -1081,6 +1084,12 @@ export default class PatientViewPage extends React.Component<
                                                     disableTooltip={
                                                         this.genePanelModal
                                                             .isOpen
+                                                    }
+                                                    sampleIdToClinicalDataMap={
+                                                        this
+                                                            .patientViewPageStore
+                                                            .clinicalDataGroupedBySampleMap
+                                                            .result
                                                     }
                                                 />
                                             </div>
