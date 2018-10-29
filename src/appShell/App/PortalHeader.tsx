@@ -7,6 +7,7 @@ import {openSocialAuthWindow} from "../../shared/lib/openSocialAuthWindow";
 import {AppStore} from "../../AppStore";
 import {observer} from "mobx-react";
 import {buildCBioPortalPageUrl} from "../../shared/api/urls";
+import {Button, DropdownButton, DropdownButton, MenuItem} from "react-bootstrap";
 
 @observer
 export default class PortalHeader extends React.Component<{ appStore:AppStore }, {}> {
@@ -18,7 +19,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"datasets",
                 text:"Data Sets",
-                address:"/datasets",
+                address:"/s/datasets",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_data_tab === false
             },
@@ -26,7 +27,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"webAPI",
                 text:"Web API",
-                address:"/webAPI",
+                address:"/s/webAPI",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_web_api_tab === false
             },
@@ -34,7 +35,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"rMatlab",
                 text:"R/MATLAB",
-                address:"/rmatlab",
+                address:"/s/rmatlab",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_r_matlab_tab === false
             },
@@ -42,7 +43,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"tutorials",
                 text:"Tutorials",
-                address:"/tutorials",
+                address:"/s/tutorials",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_tutorials_tab === false
             },
@@ -50,7 +51,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"faq",
                 text:"FAQ",
-                address:"/faq",
+                address:"/s/faq",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_faqs_tab === false
             },
@@ -58,7 +59,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"news",
                 text:"News",
-                address:"/news",
+                address:"/s/news",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_news_tab === false
             },
@@ -66,7 +67,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"visualize",
                 text:"Visualize Your Data",
-                address:"/visualize",
+                address:"/s/visualize",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_tools_tab === false
             },
@@ -74,7 +75,7 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
             {
                 id:"about",
                 text:"About",
-                address:"/about",
+                address:"/s/about",
                 internal:true,
                 hide:()=>AppConfig.serverConfig.skin_show_about_tab === false
             },
@@ -99,6 +100,21 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
 
     }
 
+    private createTokenFunction() {
+        fetch("http://dashi-dev.cbio.mskcc.org:8080/security-test/api-legacy/dataAccessToken/6f3f730d-4dd7-4781-9b5b-39481513f036",
+        //http://dashi-dev.cbio.mskcc.org:8080/security-test/api-legacy/dataAccessToken?allowRevocationOfOtherTokens=true",
+            { method: "GET"})
+            .then(function (response) {
+                console.log(response);
+                alert(response.body);
+                return(response);
+            }).then(function(parsedData) {
+                alert(parsedData.message);
+            }).catch(function(error) {
+                alert(error);
+            });
+    }
+
     render(){
         return <header>
             <div id="leftHeaderContent">
@@ -111,25 +127,35 @@ export default class PortalHeader extends React.Component<{ appStore:AppStore },
                     </ul>
                 </nav>
             </div>
+            <div className="identity">Logged in as {this.props.appStore.userName}
+                <span className="pipeSeperator">|</span>
+                <a href={buildCBioPortalPageUrl(this.props.appStore.logoutUrl)}>Sign out</a>
+
+            </div>
 
             <div id="rightHeaderContent">
                 <If condition={this.props.appStore.isLoggedIn}>
                     <Then>
-                        <div className="identity">Logged in as {this.props.appStore.userName}
-                            <span className="pipeSeperator">|</span>
-                             <a href={buildCBioPortalPageUrl(this.props.appStore.logoutUrl)}>Sign out</a>
-
+                        <div className={DropdownButton}>
+                            <DropdownButton
+                                bsSize="xsmall"
+                                title={this.props.appStore.userName}
+                                id="dropdown-size-small"
+                            >
+                                <MenuItem href={buildCBioPortalPageUrl(this.props.appStore.logoutUrl)} eventKey="1">Sign Out</MenuItem>
+                                <MenuItem eventKey="2" onSelect={this.createTokenFunction}>Create Token</MenuItem>
+                            </DropdownButton>
                         </div>
                     </Then>
                     <Else>
-                        <If condition={AppConfig.serverConfig.authenticationMethod === "social_auth"}>
+                        <If condition={AppConfig.authGoogleLogin}>
                             <div className="identity"><button className="btn btn-default" onClick={()=>openSocialAuthWindow(this.props.appStore)}>Login</button></div>
                         </If>
                     </Else>
                 </If>
 
                 <If condition={!_.isEmpty(AppConfig.serverConfig.skin_right_logo)}>
-                    <img id="institute-logo" src={`images/${AppConfig.serverConfig.skin_right_logo!}`} alt="Institute Logo" />
+                    <img id="institute-logo" src={AppConfig.serverConfig.skin_right_logo!} alt="Institute Logo" />
                 </If>
 
             </div>
