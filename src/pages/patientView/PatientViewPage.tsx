@@ -417,7 +417,7 @@ export default class PatientViewPage extends React.Component<IPatientViewPagePro
                                                 columnVisibilityProps={{
                                                     onColumnToggled: this.onMutationTableColumnVisibilityToggled
                                                 }}
-                                                clinicalDataForSample={patientViewPageStore.clinicalDataForSamples.result}
+                                                clinicalDataForSamples={patientViewPageStore.clinicalDataForSamples.result}
                                             />
                                         )
                                     }
