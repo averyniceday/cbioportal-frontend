@@ -13,19 +13,12 @@ export default class FACETSColumnFormatter {
     static maxBarHeight = 12;
     static indexToBarLeft = (n:number) => n*(FACETSColumnFormatter.barWidth + FACETSColumnFormatter.barSpacing);
 
-    public static getComponentForSampleArgs<T extends {tumorAltCount:number,molecularProfileId:string}>(mutation:T) {
-        const altReads = mutation.tumorAltCount;
-
+    public static getComponentForSampleArgs<T extends {ccfMCopies:number}>(mutation:T) {
+        const ccfMCopiesValue = mutation.ccfMCopies;
         let opacity: number = 1;
         let extraTooltipText: string = '';
-        if (isUncalled(mutation.molecularProfileId)) {
-            if (altReads > 0) {
-                opacity = 0.1;
-                extraTooltipText = "Mutation has supporting reads, but wasn't called";
-            } else {
-                opacity = 0;
-                extraTooltipText = "Mutation has 0 supporting reads and wasn't called";
-            }
+        if (ccfMCopiesValue !== 1) {
+            opacity = .5;
         }
         return {
            opacity,
@@ -38,13 +31,9 @@ export default class FACETSColumnFormatter {
             const barHeight = (isNaN(ccfMCopies) ? 0 : ccfMCopies)*FACETSColumnFormatter.maxBarHeight;
             const barY = FACETSColumnFormatter.maxBarHeight - barHeight;
 
-
             const bar = (<rect x={barX} y={barY} width={FACETSColumnFormatter.barWidth} height={barHeight} fill={color}/>);
-
-            const variantReadText:string = "CCF Value";
-
             const text = (<span>
-                    <strong>{ccfMCopies.toFixed(2)}</strong> {variantReadText}
+                    <strong>{ccfMCopies.toFixed(2)}</strong>
                 </span>);
             return {
                 sampleId:mutation.sampleId, bar, component:sampleComponent, text, ccfMCopies
