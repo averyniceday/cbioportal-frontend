@@ -22,9 +22,25 @@ export default class MutantCopiesColumnFormatter
      * @param data  column formatter data
      * @returns {string}    mutation assessor text value
      */
-    public static getDisplayValue(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined):string
+    public static getDisplayValue(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined, sampleIds:string[]):string
     {
-        return MutantCopiesColumnFormatter.getMutantCopiesOverTotalCopies(data, sampleIdToClinicalDataMap);
+        let values = [];
+        const sampleToValue:{[key: string]: string} = {};
+        for (const mutation of data) {
+            sampleToValue[mutation.sampleId] = MutantCopiesColumnFormatter.getMutantCopiesOverTotalCopies([mutation], sampleIdToClinicalDataMap);
+        }
+        const samplesWithValue = sampleIds.filter(sampleId =>
+                sampleToValue[sampleId] && sampleToValue[sampleId].toString().length > 0);
+        if (!samplesWithValue) {
+            return "";
+        } else if (samplesWithValue.length === 1) {
+             return sampleToValue[samplesWithValue[0]];
+        } else {
+            let toReturn:string[] = samplesWithValue.map((sampleId:string) => {
+                return sampleToValue[sampleId];
+            });
+            return toReturn.join("; ");
+        }
     }
 
     public static invalidTotalCopyNumber(value:number):boolean
@@ -91,10 +107,10 @@ export default class MutantCopiesColumnFormatter
         return textValue;
     }
     
-    public static renderFunction(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined)
+    public static renderFunction(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined, sampleIds:string[])
     {
         // use text for all purposes (display, sort, filter)
-        const text:string = MutantCopiesColumnFormatter.getDisplayValue(data, sampleIdToClinicalDataMap);
+        const text:string = MutantCopiesColumnFormatter.getDisplayValue(data, sampleIdToClinicalDataMap, sampleIds);
         // use actual value for tooltip
         const toolTip:string = MutantCopiesColumnFormatter.getMutantCopiesToolTip(data, sampleIdToClinicalDataMap);
         let content = <span>{text}</span>;

@@ -61,35 +61,33 @@ export default class ClonalColumnFormatter {
     }
     
     public static getTooltip(sampleId:string, clonalValue:string, ccfMCopiesUpperValue:string) {
-        let clonalDisplay = "";
+        let clonalColor = "";
         if (clonalValue === "yes") {
-            clonalDisplay = "Y";
+            clonalColor = "limegreen";
         } else if  (clonalValue === "no") {
-            clonalDisplay = "N";
+            clonalColor = "dimgrey";
         } else {
-            clonalDisplay = "NA";
+            clonalColor = "lightgrey";
         }
-        if (clonalDisplay === "NA") {
-            return (<span></span>);
-        } 
-        return (<span>
-                    <strong>{sampleId} ({clonalDisplay})</strong>: {ccfMCopiesUpperValue}
-                </span>
+        return (
+                <div> 
+                        <table>
+                                <tr><td>Sample</td><td><strong>{sampleId}</strong></td></tr>
+                                <tr><td>Clonal</td><td><span style={{color: `${clonalColor}`, fontWeight: "bold"}}>{clonalValue}</span></td></tr>
+                                <tr><td style={{paddingRight:5}}>CCF Upper</td><td><strong>{ccfMCopiesUpperValue}</strong></td></tr>
+                        </table>
+                </div>
         );  
     }
 
     public static getClonalCircle(clonalValue:string) {
         let color:string = "";
-        let letter:string = "";
         if (clonalValue === "yes") {
             color = "limegreen";
-            letter = "Y";
         } else if (clonalValue === "no") {
             color = "dimgrey";
-            letter = "N";
         } else {
             color = "lightgrey";
-            letter = "NA";
         }
         return (
                 <svg height="10" width="10">
@@ -138,24 +136,6 @@ export default class ClonalColumnFormatter {
         */
     }
     
-    // can be removed if mouseover is dropped
-    public static getTextValue(data:number):string {
-        let textValue:string = "";
-        if (data) {
-            textValue = data.toString();
-        }
-        return textValue;
-    }
-
-    // can be removed if mouseover is dropped
-    public static getTooltipValue(data:Mutation[]):string {
-        const ccfMCopiesValue = ClonalColumnFormatter.getCcfMCopiesValue(data);
-        if (floatValueIsNA(ccfMCopiesValue)) {
-            return "FACETS data not available";
-        } 
-        return "CCF: " + ClonalColumnFormatter.getTextValue(ccfMCopiesValue);
-    } 
-            
     public static getClonalDownload(mutations:Mutation[]): string|string[]
     {
         let result = [];
