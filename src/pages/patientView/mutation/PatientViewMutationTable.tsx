@@ -116,7 +116,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
             name: "Mutant Copies",
              tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
             render:(d:Mutation[])=>MutantCopiesColumnFormatter.renderFunction(d, this.props.sampleIdToClinicalDataMap, this.getSamples()),
-            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValue(d, this.props.sampleIdToClinicalDataMap, this.getSamples())        
+            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.props.sampleIdToClinicalDataMap, this.getSamples())        
         };
 
         // customization for allele count columns
