@@ -10,7 +10,7 @@ import {floatValueIsNA} from "shared/lib/NumberUtils";
 
 export default class FACETSClonalColumnFormatter {
 
-    public static getDisplayValue(mutations:Mutation[], sampleIds:string[], sampleManager:SampleManager|null) {
+    public static getDisplayValue(mutations:Mutation[], sampleIds:string[], sampleManager:SampleManager) {
         let values:string[] = [];
         const sampleToValue:{[key: string]: any} = {};
         const sampleToCCF:{[key: string]: number} = {};
@@ -29,13 +29,13 @@ export default class FACETSClonalColumnFormatter {
         if (!samplesWithValue) {
             return (<span></span>);
         } else if (samplesWithValue.length === 1) {
-             tdValue = <li><DefaultTooltip overlay={FACETSClonalColumnFormatter.getTooltip(`${samplesWithValue[0]}`, `${sampleToValue[samplesWithValue[0]]}`, `${sampleToCCF[samplesWithValue[0]]}`)} placement="left" arrowContent={<div className="rc-tooltip-arrow-inner"/>}>{FACETSClonalColumnFormatter.getClonalCircle(sampleToValue[samplesWithValue[0]])}</DefaultTooltip></li>;
+             tdValue = <li><DefaultTooltip overlay={FACETSClonalColumnFormatter.getTooltip(`${samplesWithValue[0]}`, `${sampleToValue[samplesWithValue[0]]}`, `${sampleToCCF[samplesWithValue[0]]}`, sampleManager)} placement="left" arrowContent={<div className="rc-tooltip-arrow-inner"/>}>{FACETSClonalColumnFormatter.getClonalCircle(sampleToValue[samplesWithValue[0]])}</DefaultTooltip></li>;
         }
         // multiple value: add sample id and value pairs
         else {
              tdValue = samplesWithValue.map((sampleId:string) => {
                 return (
-                    <li><DefaultTooltip overlay={FACETSClonalColumnFormatter.getTooltip(`${sampleId}`, `${sampleToValue[sampleId]}`, `${sampleToCCF[sampleId]}`)} placement="left" arrowContent={<div className="rc-tooltip-arrow-inner"/>}>{FACETSClonalColumnFormatter.getClonalCircle(`${sampleToValue[sampleId]}`)}</DefaultTooltip></li>
+                    <li><DefaultTooltip overlay={FACETSClonalColumnFormatter.getTooltip(`${sampleId}`, `${sampleToValue[sampleId]}`, `${sampleToCCF[sampleId]}`, sampleManager)} placement="left" arrowContent={<div className="rc-tooltip-arrow-inner"/>}>{FACETSClonalColumnFormatter.getClonalCircle(`${sampleToValue[sampleId]}`)}</DefaultTooltip></li>
                 );
             });
         }
@@ -46,7 +46,7 @@ export default class FACETSClonalColumnFormatter {
                );
     }
 
-    public static getTooltip(sampleId:string, clonalValue:string, ccfMCopies:string) {
+    public static getTooltip(sampleId:string, clonalValue:string, ccfMCopies:string, sampleManager:SampleManager) {
         let clonalColor = "";
         if (clonalValue === "yes") {
             clonalColor = "limegreen";
@@ -58,8 +58,8 @@ export default class FACETSClonalColumnFormatter {
         return (
                 <div>
                         <table>
-                                <tr><td>Sample</td><td><strong>{sampleId}</strong></td></tr>
-                                <tr><td>Clonal</td><td><span style={{color: `${clonalColor}`, fontWeight: "bold"}}>{clonalValue}</span></td></tr>
+                                <tr><td style={{paddingRight:10}}>{sampleManager.getComponentForSample(sampleId, 1, "")}</td><td><strong></strong></td></tr>
+                                <tr><td style={{paddingRight:5}}>Clonal</td><td><span style={{color: `${clonalColor}`, fontWeight: "bold"}}>{clonalValue}</span></td></tr>
                                 <tr><td style={{paddingRight:5}}>CCF</td><td><strong>{ccfMCopies}</strong></td></tr>
                         </table>
                 </div>
@@ -109,15 +109,6 @@ export default class FACETSClonalColumnFormatter {
         if (!sampleManager) {
             return (<span></span>);
         }
-        const sampleOrder = sampleManager.getSampleIdsInOrder();
-        const sampleElements = mutations.map((m:Mutation) => {
-            const args = FACETSClonalColumnFormatter.getComponentForSampleArgs(m);
-            return FACETSClonalColumnFormatter.convertMutationToSampleElement(
-                m,
-                sampleManager.getColorForSample(m.sampleId),
-                sampleManager.getComponentForSample(m.sampleId, args.opacity, args.extraTooltipText)
-            );
-        });
         return FACETSClonalColumnFormatter.getDisplayValue(mutations, sampleIds, sampleManager);
     }
 
@@ -133,14 +124,6 @@ export default class FACETSClonalColumnFormatter {
         }
         return result;
     }
-
-
-
-
-
-
-
-
 
     public static getComponentForSampleArgs<T extends {ccfMCopies:number}>(mutation:T) {
         const ccfMCopiesValue = mutation.ccfMCopies;
