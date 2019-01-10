@@ -11,7 +11,6 @@ import AlleleCountColumnFormatter from "shared/components/mutationTable/column/A
 import DiscreteCNAColumnFormatter from "shared/components/mutationTable/column/DiscreteCNAColumnFormatter";
 import MutantCopiesColumnFormatter from "shared/components/mutationTable/column/MutantCopiesColumnFormatter";
 import CancerCellFractionColumnFormatter from "shared/components/mutationTable/column/CancerCellFractionColumnFormatter";
-//import ClonalColumnFormatter from "shared/components/mutationTable/column/ClonalColumnFormatter";
 import FACETSClonalColumnFormatter from "./column/FACETSClonalColumnFormatter";
 import FACETSMutantCopiesColumnFormatter from "./column/FACETSMutantCopiesColumnFormatter";
 import PatientDiscreteCNAColumnFormatter from "./column/PatientDiscreteCNAColumnFormatter";
