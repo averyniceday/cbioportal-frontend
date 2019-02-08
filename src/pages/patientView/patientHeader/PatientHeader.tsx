@@ -34,7 +34,7 @@ export default class PatientHeader extends React.Component<IPatientHeaderProps, 
         // TODO: use internal API service instead, once this exists
         if (darwinUrl !== undefined && darwinUrl !== null && darwinUrl !== '') {
             // add link to darwin
-            let darwinImgSrc = require("./images/darwin_logo.png");
+            let darwinImgSrc = require("./images/ddp_logo.png");
             return (<a target='_blank' href={darwinUrl}><img style={{paddingLeft:'5px'}} src={darwinImgSrc} /></a>);
         } else {
             return null;
