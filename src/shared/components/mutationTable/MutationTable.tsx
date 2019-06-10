@@ -286,6 +286,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
 
         this._columns[MutationTableColumnType.FACETS_COPY_NUM] = {
             name: "Integer Copy #",
+            tooltip: (<span>Absolute copy number, LOH, and WGD-copy number (via FACETS)</span>),
             render:(d:Mutation[])=>{
                 return FACETSCNAColumnFormatter.renderFunction(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId]);
             },
@@ -438,8 +439,8 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
         };
 
         this._columns[MutationTableColumnType.CLONAL] = {
-            name: "Clonal",
-            tooltip: (<span>FACETS Clonal</span>),
+            name: "Clonality",
+            tooltip: (<span>Clonality (via FACETS)</span>),
             render:(d:Mutation[])=>ClonalColumnFormatter.renderFunction(d, [d[0].sampleId]),
             download:ClonalColumnFormatter.getClonalValue,
             sortBy:(d:Mutation[])=>d.map(m=>m.ccfMCopiesUpper)
@@ -447,7 +448,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
 
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = {
             name: "CCF",
-            tooltip: (<span>FACETS Cancer Cell Fraction</span>),
+            tooltip: (<span>Cancer Cell Fraction (via FACETS)</span>),
             render:CancerCellFractionColumnFormatter.renderFunction,
             download:CancerCellFractionColumnFormatter.getCancerCellFractionValue,
             sortBy:(d:Mutation[])=>d.map(m=>m.ccfMCopies)
@@ -455,7 +456,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
 
         this._columns[MutationTableColumnType.MUTANT_COPIES] = {
             name: "Mutant Copies",
-            tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
+            tooltip: (<span>Mutant Copies / Total Copies (via FACETS)</span>),
             render:(d:Mutation[])=>MutantCopiesColumnFormatter.renderFunction(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId]),
             download:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId]),
             sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId])

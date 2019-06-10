@@ -104,15 +104,15 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
 
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = {
             name: "CCF",
-            tooltip:(<span>Cancer Cell Fraction</span>),
+            tooltip:(<span>Cancer Cell Fraction (via FACETS)</span>),
             render: (d:Mutation[])=>FACETSColumnFormatter.renderFunction(d, this.props.sampleManager),
             sortBy:(d:Mutation[])=>d.map(m=>m.ccfMCopies),
             download:(d:Mutation[])=>CancerCellFractionColumnFormatter.getCancerCellFractionDownload(d)
         };
 
         this._columns[MutationTableColumnType.CLONAL] = {
-            name: "Clonal",
-            tooltip: (<span>FACETS Clonal</span>),
+            name: "Clonality",
+            tooltip: (<span>Clonality (via FACETS)</span>),
             render:(d:Mutation[])=>FACETSClonalColumnFormatter.renderFunction(d, this.getSamples(), this.props.sampleManager),
             sortBy:(d:Mutation[])=>d.map(m=>m.ccfMCopiesUpper),
             download:(d:Mutation[])=>FACETSClonalColumnFormatter.getClonalDownload(d)
@@ -120,7 +120,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
 
         this._columns[MutationTableColumnType.MUTANT_COPIES] = {
             name: "Mutant Copies",
-            tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
+            tooltip: (<span>Mutant Copies / Total Copies (via FACETS)</span>),
             render:(d:Mutation[])=>FACETSMutantCopiesColumnFormatter.renderFunction(d, this.props.sampleIdToClinicalDataMap, this.getSamples(), this.props.sampleManager),
             download:(d:Mutation[])=>MutantCopiesColumnFormatter.getMutantCopiesDownload(d, this.props.sampleIdToClinicalDataMap),
             sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.props.sampleIdToClinicalDataMap, this.getSamples())
@@ -128,6 +128,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
 
         this._columns[MutationTableColumnType.FACETS_COPY_NUM] = {
             name: "Integer Copy #",
+            tooltip: (<span>Absolute copy number, LOH and WGD copy-number (via FACETS)</span>),
             render:(d:Mutation[])=>PatientFACETSCNAColumnFormatter.renderFunction(d,this.props.sampleIdToClinicalDataMap, this.getSamples(), this.props.sampleManager),
             sortBy:(d:Mutation[])=>FACETSCNAColumnFormatter.getSortValue(d, this.props.sampleIdToClinicalDataMap, this.getSamples())
         };
