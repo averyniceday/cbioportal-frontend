@@ -5,14 +5,6 @@ import styles from "./mutationType.module.scss";
 import getCanonicalMutationType from "public-lib/lib/getCanonicalMutationType";
 import {floatValueIsNA} from "shared/lib/NumberUtils";
 
-interface IMutationTypeFormat {
-    label?: string;
-    longName?: string;
-    className: string;
-    mainType: string;
-    priority?: number;
-}
-
 /**
  * @author Avery Wang
  */

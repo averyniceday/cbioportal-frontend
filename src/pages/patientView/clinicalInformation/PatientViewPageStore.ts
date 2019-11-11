@@ -431,8 +431,7 @@ export class PatientViewPageStore {
     readonly clinicalDataGroupedBySampleMap = remoteData({
         await: () => [this.clinicalDataGroupedBySample],
         invoke: async() => {
-            let sampleIdToClinicalDataMap =  mapSampleIdToClinicalData(this.clinicalDataGroupedBySample.result, 'id', 'clinicalData');
-            return sampleIdToClinicalDataMap;
+            return mapSampleIdToClinicalData(this.clinicalDataGroupedBySample.result, 'id', 'clinicalData');
         }
     }, {});
 

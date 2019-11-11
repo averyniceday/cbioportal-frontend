@@ -4,93 +4,24 @@ import {Mutation, ClinicalData} from "shared/api/generated/CBioPortalAPI";
 import styles from "./mutationType.module.scss";
 import getCanonicalMutationType from "public-lib/lib/getCanonicalMutationType";
 import SampleManager from "../../SampleManager";
-
-interface IMutationTypeFormat {
-    label?: string;
-    longName?: string;
-    className: string;
-    mainType: string;
-    priority?: number;
-}
+import {getMutantCopiesToolTipBySample,
+    getSampleIdToMutantCopiesMap,
+    getMutantCopiesOverTotalCopies,
+    constructToolTipString} from "shared/components/mutationTable/column/MutantCopiesColumnFormatter";
 
 /**
  * @author Avery Wang
  */
 export default class PatientMutantCopiesColumnFormatter {
-    /* Determines the display value by using the impact field.
-     *
-     * @param data  column formatter data
-     * @returns {string}    mutation assessor text value
-     */
-    public static getDisplayValue(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined, sampleIds:string[]):{[key: string]: string} {
-        const sampleToValue:{[key: string]: string} = {};
-        for (const mutation of data) {
-            const value:string = PatientMutantCopiesColumnFormatter.getMutantCopiesOverTotalCopies(mutation, sampleIdToClinicalDataMap);
-            if (value.toString().length > 0) {
-                sampleToValue[mutation.sampleId] = value;
-            }
-        }
-        return sampleToValue;
-    }
 
-    public static getDisplayValueAsString(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined, sampleIds:string[]):string {
-        const displayValuesBySample:{[key: string]: string} = PatientMutantCopiesColumnFormatter.getDisplayValue(data, sampleIdToClinicalDataMap, sampleIds);
-        const sampleIdsWithValues = sampleIds.filter(sampleId => displayValuesBySample[sampleId]);
-        const displayValuesAsString = sampleIdsWithValues.map((sampleId:string) => {
-            return displayValuesBySample[sampleId];
-        })
-        return displayValuesAsString.join("; ");
-    }
-
-    public static getMutantCopiesOverTotalCopies(mutation:Mutation, sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined):string {
-        let textValue:string = "";
-        if (mutation.alleleSpecificCopyNumber !== undefined && mutation.alleleSpecificCopyNumber.mutantCopies !== undefined && mutation.alleleSpecificCopyNumber.totalCopyNumber !== undefined) {
-            const totalCopyNumber:number = mutation.alleleSpecificCopyNumber.totalCopyNumber;
-            const mutantCopies = mutation.alleleSpecificCopyNumber.mutantCopies;
-            textValue = mutantCopies.toString() + "/" + totalCopyNumber.toString();
-        }
-        return textValue;
-    }
-
-    /**
-     * Returns map of sample id to tooltip text value.
-     * @param data
-     * @param sampleIdToClinicalDataMap
-     * @param sampleIdsWithValues
-     */
-    public static getMutantCopiesToolTip(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined, sampleIdsWithValues:string[]):{[key: string]: string} {
-        const sampleToToolTip:{[key: string]: string} = {};
-        for (const mutation of data) {
-            sampleToToolTip[mutation.sampleId] = PatientMutantCopiesColumnFormatter.constructToolTipString(mutation, sampleIdToClinicalDataMap);
-        }
-        return sampleToToolTip;
-    }
-
-    /**
-     * Constructs tooltip string value.
-     * @param mutation
-     * @param sampleIdToClinicalDataMap
-     */
-    public static constructToolTipString(mutation:Mutation, sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined):string {
-        let textValue:string = "";
-        if (mutation.alleleSpecificCopyNumber !== undefined && mutation.alleleSpecificCopyNumber.mutantCopies !== undefined && mutation.alleleSpecificCopyNumber.totalCopyNumber !== undefined) {
-            const totalCopyNumber:number = mutation.alleleSpecificCopyNumber.totalCopyNumber;
-            const mutantCopies:number = mutation.alleleSpecificCopyNumber.mutantCopies; 
-            textValue = mutantCopies.toString(10) + " out of " + totalCopyNumber.toString(10) + " copies of this gene are mutated";
-        } else {
-            textValue = "Missing data values, mutant copies can not be computed";
-        }
-        return textValue;
-    }
-
-    public static renderFunction(data:Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined, sampleIds:string[], sampleManager:SampleManager|null) {
+    public static renderFunction(data:Mutation[], sampleIds:string[], sampleManager:SampleManager|null) {
         if (!sampleManager) {
             return <span />;
         }
         // get display text values map (sampleid -> value), list of sample ids with values in 'displayValuesBySample', and calculate tooltip by sample
-        const displayValuesBySample:{[key: string]: string} = PatientMutantCopiesColumnFormatter.getDisplayValue(data, sampleIdToClinicalDataMap, sampleIds);
+        const displayValuesBySample:{[key: string]: string} = getSampleIdToMutantCopiesMap(data);
+        const toolTipBySample:{[key: string]: string} = getMutantCopiesToolTipBySample(data);
         const sampleIdsWithValues = sampleIds.filter(sampleId => displayValuesBySample[sampleId]);
-        const toolTipBySample:{[key: string]: string} = PatientMutantCopiesColumnFormatter.getMutantCopiesToolTip(data, sampleIdToClinicalDataMap, sampleIdsWithValues);
         if (!sampleIdsWithValues) {
             return <span />;
         } else {

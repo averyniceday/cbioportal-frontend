@@ -4,15 +4,7 @@ import {Mutation} from "shared/api/generated/CBioPortalAPI";
 import styles from "./mutationType.module.scss";
 import getCanonicalMutationType from "public-lib/lib/getCanonicalMutationType";
 import {floatValueIsNA} from "shared/lib/NumberUtils";
-
-interface IMutationTypeFormat {
-    label?: string;
-    longName?: string;
-    className: string;
-    mainType: string;
-    priority?: number;
-}
-
+import {hasASCNProperty} from "shared/lib/MutationUtils";
 /**
  * @author Avery Wang
  */
@@ -26,17 +18,8 @@ export default class CancerCellFractionColumnFormatter {
         return CancerCellFractionColumnFormatter.getCancerCellFractionValue(data);
     }
 
-    public static getCcfMCopiesValue(data:Mutation[]):string {
-        let ccfMCopiesValue = "";
-        if (data[0].alleleSpecificCopyNumber !== undefined && data[0].alleleSpecificCopyNumber.ccfMCopies !== undefined) {
-            ccfMCopiesValue = data[0].alleleSpecificCopyNumber.ccfMCopies.toFixed(2);
-        }
-        return ccfMCopiesValue;
-    }
-
     public static getCancerCellFractionValue(data:Mutation[]):string {
-        const ccfMCopiesValue = CancerCellFractionColumnFormatter.getCcfMCopiesValue(data);
-        return ccfMCopiesValue;
+        return hasASCNProperty(data[0], "ccfMCopies") ? data[0].alleleSpecificCopyNumber.ccfMCopies.toFixed(2) : "";
     }
 
     public static getTextValue(data:number):string {
@@ -51,7 +34,6 @@ export default class CancerCellFractionColumnFormatter {
         // use text for all purposes (display, sort, filter)
         const text:string = CancerCellFractionColumnFormatter.getDisplayValue(data);
         return <span>{text}</span>;
-        return content;
     }
     
     public static getCancerCellFractionDownload(mutations:Mutation[]): string|string[]

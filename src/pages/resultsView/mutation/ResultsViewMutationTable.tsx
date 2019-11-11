@@ -120,19 +120,19 @@ export default class ResultsViewMutationTable extends MutationTable<IResultsView
         };
 
         this._columns[MutationTableColumnType.CLONAL].shouldExclude = ()=> {
-            return !this.hasCcfMCopies;
+            return !this.hasRequiredASCNProperty("ccfMCopies"); 
         };
 
         this._columns[MutationTableColumnType.ASCN_METHOD].shouldExclude = ()=> {
-            return !this.hasASCNMethod;
+            return !this.hasRequiredASCNProperty("ascnMethod");
         }
 
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION].shouldExclude = ()=> {
-            return !this.hasCcfMCopies;
+            return !this.hasRequiredASCNProperty("ccfMCopies"); 
         };
 
         this._columns[MutationTableColumnType.MUTANT_COPIES].shouldExclude = ()=> {
-            return !this.hasMutantCopies;
+            return !this.hasRequiredASCNProperty("mutantCopies");
         };
 
         this._columns[MutationTableColumnType.NUM_MUTATIONS].shouldExclude = ()=>{
@@ -146,49 +146,4 @@ export default class ResultsViewMutationTable extends MutationTable<IResultsView
             () => <span style = {{display:'inline-block'}}>Exon<br/>({this.props.totalNumberOfExons} in total)</span>;
     }
 
-    @computed private get hasCcfMCopies():boolean {
-        let data:Mutation[][] = [];
-        if (this.props.dataStore) {
-            data = this.props.dataStore.allData;
-        } else if (this.props.data) {
-            data = this.props.data;
-        }
-        return data.some((row:Mutation[]) => {
-            return row.some((m:Mutation) => {
-                return (m.alleleSpecificCopyNumber !== undefined && m.alleleSpecificCopyNumber.ccfMCopies !== undefined);
-            });
-        });
-    }
-
-    @computed private get hasASCNMethod():boolean {
-        let data:Mutation[][] = [];
-        if (this.props.dataStore) {
-            data = this.props.dataStore.allData;
-        } else if (this.props.data) {
-            data = this.props.data;
-        }
-        return data.some((row:Mutation[]) => {
-            return row.some((m:Mutation) => {
-                return (m.alleleSpecificCopyNumber !== undefined && m.alleleSpecificCopyNumber.ascnMethod !== undefined);
-            });
-        });
-    }
- 
-    @computed private get hasMutantCopies():boolean {
-        let data:Mutation[][] = [];
-        let clinicalData:{[sampleId:string]:ClinicalData[]} = {};
-        if (this.props.sampleIdToClinicalDataMap) {
-            clinicalData = this.props.sampleIdToClinicalDataMap;
-        }
-        if (this.props.data) {
-            data = this.props.data;
-        } else if (this.props.dataStore) {
-            data = this.props.dataStore.allData;
-        }
-        return data.some((row:Mutation[]) => {
-            return row.some((m:Mutation) => {
-                return (m.alleleSpecificCopyNumber !== undefined && m.alleleSpecificCopyNumber.mutantCopies !== undefined);
-            });
-        });
-    }
 }

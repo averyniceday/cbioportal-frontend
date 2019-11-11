@@ -101,7 +101,6 @@ export interface IMutationTableProps {
     columnVisibility?: {[columnId: string]: boolean};
     columnVisibilityProps?: IColumnVisibilityControlsProps;
     sampleIdToClinicalDataMap?: {[key:string]: ClinicalData[]};
-    sampleIdToIconComponentMap?: {[key:string]: JSX.Element | undefined};
 }
 
 export enum MutationTableColumnType {
@@ -478,7 +477,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             name: "Clonal",
             tooltip: (<span>FACETS Clonal</span>),
             render:(d:Mutation[])=>ClonalColumnFormatter.renderFunction(d, [d[0].sampleId]),
-            download:ClonalColumnFormatter.getClonalValue,
+            download:ClonalColumnFormatter.getClonalDownload,
             sortBy:(d:Mutation[])=>CancerCellFractionColumnFormatter.getDisplayValue(d)
         };
 
@@ -493,9 +492,9 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
         this._columns[MutationTableColumnType.MUTANT_COPIES] = {
             name: "Mutant Copies",
             tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
-            render:(d:Mutation[])=>MutantCopiesColumnFormatter.renderFunction(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId]),
-            download:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId]),
-            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId])
+            render:(d:Mutation[])=>MutantCopiesColumnFormatter.renderFunction(d, [d[0].sampleId]),
+            download:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, [d[0].sampleId]),
+            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, [d[0].sampleId])
         };
 
         this._columns[MutationTableColumnType.FUNCTIONAL_IMPACT] = {
@@ -689,5 +688,27 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
                 columnVisibilityProps={this.props.columnVisibilityProps}
             />
         );
+    }
+    
+    protected getMutations() {
+        let data:Mutation[][]|undefined = [];
+        if (this.props.dataStore) {
+            data = this.props.dataStore.allData;
+        } else if (this.props.data) {
+            data = this.props.data;
+        }
+        return data;
+    }
+
+    protected hasRequiredASCNProperty(property:string):boolean {
+        let data = this.getMutations();
+        if (data) {
+            return data.some((row:Mutation[]) => {
+                return row.some((m:Mutation) => {
+                    return (m.alleleSpecificCopyNumber !== undefined && (m.alleleSpecificCopyNumber as any)[property] !== undefined);
+                });
+            });
+        }
+        return false;
     }
 }

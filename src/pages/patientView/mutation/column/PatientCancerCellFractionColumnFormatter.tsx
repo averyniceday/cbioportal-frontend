@@ -5,7 +5,7 @@ import DefaultTooltip from "public-lib/components/defaultTooltip/DefaultTooltip"
 import 'rc-tooltip/assets/bootstrap_white.css';
 import {Mutation} from "shared/api/generated/CBioPortalAPI";
 import SampleManager from "../../SampleManager";
-import {isUncalled} from 'shared/lib/MutationUtils';
+import {isUncalled, hasASCNProperty} from 'shared/lib/MutationUtils';
 
 export default class PatientCancerCellFractionColumnFormatter {
     static barWidth = 6;
@@ -14,22 +14,16 @@ export default class PatientCancerCellFractionColumnFormatter {
     static indexToBarLeft = (n:number) => n*(PatientCancerCellFractionColumnFormatter.barWidth + PatientCancerCellFractionColumnFormatter.barSpacing);
 
     public static getComponentForSampleArgs<T extends {alleleSpecificCopyNumber:{clonal:boolean}}>(mutation:T) {
-        let opacity: number = 1;
-        let extraTooltipText: string = '';
-        if (mutation.alleleSpecificCopyNumber !== undefined && mutation.alleleSpecificCopyNumber.clonal !== undefined) {
-            const clonalValue = mutation.alleleSpecificCopyNumber.clonal;
-            if (!clonalValue) {
-                opacity = .5;
-            }
-        }
+        const opacity:number = hasASCNProperty(mutation, "clonal") &&
+            !mutation.alleleSpecificCopyNumber.clonal ? 0.5 : 1;
         return {
             opacity,
-            extraTooltipText
-         };
+            extraTooltipText: ""
+        };
     }
 
     public static convertMutationToSampleElement<T extends {sampleId:string, alleleSpecificCopyNumber:{ccfMCopies:number}}>(mutation:T, color:string, barX:number, sampleComponent:any) {
-        if (mutation.alleleSpecificCopyNumber !== undefined && mutation.alleleSpecificCopyNumber.ccfMCopies !== undefined) {
+        if (hasASCNProperty(mutation, "ccfMCopies")) {
             const ccfMCopies = mutation.alleleSpecificCopyNumber.ccfMCopies;
             const barHeight = (isNaN(ccfMCopies) ? 0 : ccfMCopies)*PatientCancerCellFractionColumnFormatter.maxBarHeight;
             const barY = PatientCancerCellFractionColumnFormatter.maxBarHeight - barHeight;

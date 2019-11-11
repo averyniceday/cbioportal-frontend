@@ -251,3 +251,8 @@ export function uniqueGenomicLocations(mutations: Mutation[]): GenomicLocation[]
 
     return _.values(genomicLocationMap);
 }
+
+export function hasASCNProperty(mutation: any, property: string)
+{
+    return mutation.alleleSpecificCopyNumber !== undefined && (mutation.alleleSpecificCopyNumber as any)[property] !== undefined;
+}

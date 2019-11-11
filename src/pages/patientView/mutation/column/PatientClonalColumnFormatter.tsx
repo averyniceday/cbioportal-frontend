@@ -3,6 +3,8 @@ import DefaultTooltip from "public-lib/components/defaultTooltip/DefaultTooltip"
 import {Mutation} from "shared/api/generated/CBioPortalAPI";
 import SampleManager from "../../SampleManager";
 import {floatValueIsNA} from "shared/lib/NumberUtils";
+import {hasASCNProperty} from "shared/lib/MutationUtils";
+import {getClonalValue, getClonalColor, getClonalCircle} from "shared/components/mutationTable/column/ClonalColumnFormatter";
 
 export default class PatientClonalColumnFormatter {
 
@@ -11,16 +13,12 @@ export default class PatientClonalColumnFormatter {
         const sampleToValue:{[key: string]: any} = {};
         const sampleToCCF:{[key: string]: any} = {};
         for (const mutation of mutations) {
-            sampleToValue[mutation.sampleId] = PatientClonalColumnFormatter.getClonalValue([mutation]);
+            sampleToValue[mutation.sampleId] = getClonalValue([mutation]);
         }
 
         for (const mutation of mutations) {
             // check must be done because members without values will not be returned in the backend response
-            if (mutation.alleleSpecificCopyNumber !== undefined && mutation.alleleSpecificCopyNumber.ccfMCopies !== undefined) {
-                sampleToCCF[mutation.sampleId] = mutation.alleleSpecificCopyNumber.ccfMCopies;
-            } else {
-                sampleToCCF[mutation.sampleId] = "NA"
-            }
+            sampleToCCF[mutation.sampleId] = hasASCNProperty(mutation, "ccfMCopies") ? mutation.alleleSpecificCopyNumber.ccfMCopies : "NA";
         }
         // exclude samples with invalid count value (undefined || empty || lte 0)
         const samplesWithValue = sampleIds.filter(sampleId =>
@@ -40,48 +38,14 @@ export default class PatientClonalColumnFormatter {
             });
         }
         return (
-                <span style={{display:'inline-block', minWidth:100}}>
-                    <ul style={{marginBottom:0}} className="list-inline list-unstyled">{ tdValue }</ul>
-                </span>
-               );
-    }
-    
-    public static getClonalValue(mutations:Mutation[]):string {
-        let textValue:string = "NA";
-        if (mutations[0].alleleSpecificCopyNumber !== undefined && mutations[0].alleleSpecificCopyNumber.clonal !== undefined) {
-            const clonalValue = mutations[0].alleleSpecificCopyNumber.clonal;
-            if (clonalValue) {
-                textValue = "yes";
-            } else {
-                textValue = "no";
-            }
-        }
-        return textValue;
-    }
-
-    public static getClonalColor(clonalValue:string):string {
-        let clonalColor:string = "";
-        if (clonalValue === "yes") {
-            clonalColor = "limegreen";
-        } else if (clonalValue === "no") {
-            clonalColor = "dimgrey";
-        } else {
-            clonalColor = "lightgrey";
-        }
-        return clonalColor;
-    }
-
-    public static getClonalCircle(clonalValue:string) {
-        let clonalColor = PatientClonalColumnFormatter.getClonalColor(clonalValue);
-        return (
-                <svg height="10" width="10">
-                    <circle cx={5} cy={5} r={5} fill={`${clonalColor}`}/>
-                </svg>
+            <span style={{display:'inline-block', minWidth:100}}>
+                <ul style={{marginBottom:0}} className="list-inline list-unstyled">{ tdValue }</ul>
+            </span>
         );
     }
-
+    
     public static getTooltip(sampleId:string, clonalValue:string, ccfMCopies:string, sampleManager:SampleManager) {
-        let clonalColor = PatientClonalColumnFormatter.getClonalColor(clonalValue);
+        let clonalColor = getClonalColor(clonalValue);
         return (
                 <div>
                     <table>
@@ -94,8 +58,8 @@ export default class PatientClonalColumnFormatter {
     }
 
     public static getClonalListElement(sampleId:string, clonalValue:string, ccfMCopies:string, sampleManager:SampleManager) {
-       return (
-            <li><DefaultTooltip overlay={PatientClonalColumnFormatter.getTooltip(`${sampleId}`, `${clonalValue}`, `${ccfMCopies}`, sampleManager)} placement="left" arrowContent={<div className="rc-tooltip-arrow-inner"/>}>{PatientClonalColumnFormatter.getClonalCircle(clonalValue)}</DefaultTooltip></li>
+        return (
+            <li><DefaultTooltip overlay={PatientClonalColumnFormatter.getTooltip(`${sampleId}`, `${clonalValue}`, `${ccfMCopies}`, sampleManager)} placement="left" arrowContent={<div className="rc-tooltip-arrow-inner"/>}>{getClonalCircle(clonalValue)}</DefaultTooltip></li>
         );
     }
 
@@ -110,7 +74,7 @@ export default class PatientClonalColumnFormatter {
         let result = [];
         if (mutations) {
             for (let mutation of mutations) {
-                result.push(PatientClonalColumnFormatter.getClonalValue([mutation]));
+                result.push(getClonalValue([mutation]));
             }
         }
         return result;

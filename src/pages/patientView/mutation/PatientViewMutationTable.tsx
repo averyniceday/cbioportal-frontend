@@ -138,9 +138,9 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
         this._columns[MutationTableColumnType.MUTANT_COPIES] = {
             name: "Mutant Copies",
             tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
-            render:(d:Mutation[])=>PatientMutantCopiesColumnFormatter.renderFunction(d, this.props.sampleIdToClinicalDataMap, this.getSamples(), this.props.sampleManager),
-            download:(d:Mutation[])=>MutantCopiesColumnFormatter.getMutantCopiesDownload(d, this.props.sampleIdToClinicalDataMap),
-            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.props.sampleIdToClinicalDataMap, this.getSamples())
+            render:(d:Mutation[])=>PatientMutantCopiesColumnFormatter.renderFunction(d, this.getSamples(), this.props.sampleManager),
+            download:(d:Mutation[])=>MutantCopiesColumnFormatter.getMutantCopiesDownload(d),
+            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.getSamples())
         };
 
         this._columns[MutationTableColumnType.FACETS_COPY_NUM] = {
@@ -222,20 +222,20 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
             return (!this.props.mrnaExprRankMolecularProfileId) || (this.getSamples().length > 1);
         };
 
-        this._columns[MutationTableColumnType.CLONAL].shouldExclude = ()=>{
-            return !this.hasCcfMCopies;
+        this._columns[MutationTableColumnType.CLONAL].shouldExclude = ()=> {
+            return !this.hasRequiredASCNProperty("ccfMCopies"); 
         };
-        
-        this._columns[MutationTableColumnType.ASCN_METHOD].shouldExclude =()=> {
-            return !this.hasASCNMethod;
+
+        this._columns[MutationTableColumnType.ASCN_METHOD].shouldExclude = ()=> {
+            return !this.hasRequiredASCNProperty("ascnMethod");
         }
 
-        this._columns[MutationTableColumnType.CANCER_CELL_FRACTION].shouldExclude = ()=>{
-            return !this.hasCcfMCopies;
+        this._columns[MutationTableColumnType.CANCER_CELL_FRACTION].shouldExclude = ()=> {
+            return !this.hasRequiredASCNProperty("ccfMCopies"); 
         };
 
-        this._columns[MutationTableColumnType.MUTANT_COPIES].shouldExclude = ()=>{
-            return (!this.hasMutantCopies || !this.props.discreteCNAMolecularProfileId);
+        this._columns[MutationTableColumnType.MUTANT_COPIES].shouldExclude = ()=> {
+            return !this.hasRequiredASCNProperty("mutantCopies");
         };
 
         // only hide tumor column if there is one sample and no uncalled
@@ -247,54 +247,6 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
         this._columns[MutationTableColumnType.COPY_NUM].shouldExclude = ()=>{
             return (!this.props.discreteCNAMolecularProfileId) || (this.getSamples().length > 1);
         };
-    }
-
-    @computed private get hasCcfMCopies():boolean {
-        let data:Mutation[][] = [];
-        if (this.props.data) {
-            data = this.props.data;
-        } else if (this.props.dataStore) {
-            data = this.props.dataStore.allData;
-        }
-        return data.some((row:Mutation[]) => {
-            return row.some((m:Mutation) => {
-                return (m.alleleSpecificCopyNumber !== undefined && !floatValueIsNA(m.alleleSpecificCopyNumber.ccfMCopies));
-            });
-        });
-    }
-
-    @computed private get hasASCNMethod(): boolean {
-        let data:Mutation[][] = [];
-        if (this.props.data) {
-            data = this.props.data;
-        } else if (this.props.dataStore) {
-            data = this.props.dataStore.allData;
-        }
-        return data.some((row:Mutation[]) => {
-            return row.some((m:Mutation) => {
-                return (m.alleleSpecificCopyNumber !== undefined && m.alleleSpecificCopyNumber.ascnMethod !== undefined);
-            });
-        });
-    }
-
-    @computed private get hasMutantCopies():boolean {
-        let data:Mutation[][] = [];
-        let clinicalData:{[sampleId:string]:ClinicalData[]} = {};
-        if (this.props.sampleIdToClinicalDataMap) {
-            clinicalData = this.props.sampleIdToClinicalDataMap;
-        }
-        if (this.props.data) {
-            data = this.props.data;
-        } else if (this.props.dataStore) {
-            data = this.props.dataStore.allData;
-        }
-        return data.some((row:Mutation[]) => {
-            return row.some((m:Mutation) => {
-                return (m.alleleSpecificCopyNumber !== undefined && 
-                       (m.alleleSpecificCopyNumber.totalCopyNumber !== -1 &&
-                        clinicalData[m.sampleId].filter((cd: ClinicalData) => cd.clinicalAttributeId === "FACETS_PURITY").length > 0));
-            });
-        });
     }
 
     @computed private get hasUncalledMutations():boolean {
