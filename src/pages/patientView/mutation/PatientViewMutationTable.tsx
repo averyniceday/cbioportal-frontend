@@ -23,6 +23,7 @@ import ExonColumnFormatter from "shared/components/mutationTable/column/ExonColu
 import HeaderIconMenu from "./HeaderIconMenu";
 import GeneFilterMenu, { GeneFilterOption } from "./GeneFilterMenu";
 import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
+import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
 
 export interface IPatientViewMutationTableProps extends IMutationTableProps {
     sampleManager:SampleManager | null;
@@ -129,13 +130,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
 
         this._columns[MutationTableColumnType.CLONAL] = getDefaultClonalColumnDefinition(this.getSamples(), this.props.sampleManager ? this.props.sampleManager : undefined);
 
-        this._columns[MutationTableColumnType.MUTANT_COPIES] = {
-            name: "Mutant Copies",
-            tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
-            render:(d:Mutation[])=>PatientMutantCopiesColumnFormatter.renderFunction(d, this.getSamples(), this.props.sampleManager),
-            download:(d:Mutation[])=>MutantCopiesColumnFormatter.getMutantCopiesDownload(d),
-            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, this.getSamples())
-        };
+        this._columns[MutationTableColumnType.MUTANT_COPIES] = getDefaultMutantCopiesColumnDefinition(this.getSamples(), this.props.sampleManager ? this.props.sampleManager : undefined);
 
         this._columns[MutationTableColumnType.FACETS_COPY_NUM] = {
             name: "Integer Copy #",
