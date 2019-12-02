@@ -11,7 +11,6 @@ import DiscreteCNAColumnFormatter from "shared/components/mutationTable/column/D
 import ASCNCopyNumberColumnFormatter from "shared/components/mutationTable/column/ASCNCopyNumberColumnFormatter";
 import MutantCopiesColumnFormatter from "shared/components/mutationTable/column/MutantCopiesColumnFormatter";
 import CancerCellFractionColumnFormatter from "shared/components/mutationTable/column/CancerCellFractionColumnFormatter";
-import PatientClonalColumnFormatter from "./column/PatientClonalColumnFormatter";
 import PatientMutantCopiesColumnFormatter from "./column/PatientMutantCopiesColumnFormatter";
 import PatientASCNCopyNumberColumnFormatter from "./column/PatientASCNCopyNumberColumnFormatter";
 import AlleleFreqColumnFormatter from "./column/AlleleFreqColumnFormatter";
@@ -23,6 +22,7 @@ import TumorAlleleFreqColumnFormatter from "shared/components/mutationTable/colu
 import ExonColumnFormatter from "shared/components/mutationTable/column/ExonColumnFormatter";
 import HeaderIconMenu from "./HeaderIconMenu";
 import GeneFilterMenu, { GeneFilterOption } from "./GeneFilterMenu";
+import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
 
 export interface IPatientViewMutationTableProps extends IMutationTableProps {
     sampleManager:SampleManager | null;
@@ -127,13 +127,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
             download:(d:Mutation[])=>CancerCellFractionColumnFormatter.getCancerCellFractionDownload(d)
         };
 
-        this._columns[MutationTableColumnType.CLONAL] = {
-            name: "Clonal",
-            tooltip: (<span>FACETS Clonal</span>),
-            render:(d:Mutation[])=>PatientClonalColumnFormatter.renderFunction(d, this.getSamples(), this.props.sampleManager),
-            sortBy:(d:Mutation[])=>d.map(m=>m.alleleSpecificCopyNumber.ccfMCopiesUpper),
-            download:(d:Mutation[])=>PatientClonalColumnFormatter.getClonalDownload(d)
-        };
+        this._columns[MutationTableColumnType.CLONAL] = getDefaultClonalColumnDefinition(this.getSamples(), this.props.sampleManager ? this.props.sampleManager : undefined);
 
         this._columns[MutationTableColumnType.MUTANT_COPIES] = {
             name: "Mutant Copies",
@@ -223,7 +217,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
         };
 
         this._columns[MutationTableColumnType.CLONAL].shouldExclude = ()=> {
-            return !this.hasRequiredASCNProperty("ccfMCopies"); 
+            return !this.hasRequiredASCNProperty("ccfMCopies");
         };
 
         this._columns[MutationTableColumnType.ASCN_METHOD].shouldExclude = ()=> {
@@ -231,7 +225,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
         }
 
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION].shouldExclude = ()=> {
-            return !this.hasRequiredASCNProperty("ccfMCopies"); 
+            return !this.hasRequiredASCNProperty("ccfMCopies");
         };
 
         this._columns[MutationTableColumnType.MUTANT_COPIES].shouldExclude = ()=> {

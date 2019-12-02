@@ -16,7 +16,6 @@ import GeneColumnFormatter from "./column/GeneColumnFormatter";
 import ChromosomeColumnFormatter from "./column/ChromosomeColumnFormatter";
 import ProteinChangeColumnFormatter from "./column/ProteinChangeColumnFormatter";
 import MutationTypeColumnFormatter from "./column/MutationTypeColumnFormatter";
-import ClonalColumnFormatter from "./column/ClonalColumnFormatter";
 import CancerCellFractionColumnFormatter from "./column/CancerCellFractionColumnFormatter";
 import ASCNMethodColumnFormatter from "./column/ASCNMethodColumnFormatter";
 import MutantCopiesColumnFormatter from "./column/MutantCopiesColumnFormatter";
@@ -56,6 +55,7 @@ import {CancerGene} from "public-lib/api/generated/OncoKbAPI";
 import GnomadColumnFormatter from "./column/GnomadColumnFormatter";
 import ClinVarColumnFormatter from "./column/ClinVarColumnFormatter";
 import DbsnpColumnFormatter from "./column/DbsnpColumnFormatter";
+import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
 
 
 export interface IMutationTableProps {
@@ -473,13 +473,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
                 MutationTypeColumnFormatter.getDisplayValue(d).toUpperCase().indexOf(filterStringUpper) > -1
         };
 
-        this._columns[MutationTableColumnType.CLONAL] = {
-            name: "Clonal",
-            tooltip: (<span>FACETS Clonal</span>),
-            render:(d:Mutation[])=>ClonalColumnFormatter.renderFunction(d, [d[0].sampleId]),
-            download:ClonalColumnFormatter.getClonalDownload,
-            sortBy:(d:Mutation[])=>CancerCellFractionColumnFormatter.getDisplayValue(d)
-        };
+        this._columns[MutationTableColumnType.CLONAL] = getDefaultClonalColumnDefinition();
 
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = {
             name: "CCF",
@@ -598,13 +592,13 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             visible: false,
             align: "right"
         };
-        
+
         this._columns[MutationTableColumnType.GNOMAD] = {
             name: "gnomAD",
             render: (d:Mutation[]) => GnomadColumnFormatter.renderFunction(d, this.props.genomeNexusMyVariantInfoCache as GenomeNexusMyVariantInfoCache),
             sortBy: (d:Mutation[]) => GnomadColumnFormatter.getSortValue(d, this.props.genomeNexusMyVariantInfoCache as GenomeNexusMyVariantInfoCache),
             download: (d:Mutation[]) => GnomadColumnFormatter.download(d, this.props.genomeNexusMyVariantInfoCache as GenomeNexusMyVariantInfoCache),
-            tooltip: (<span><a href="https://gnomad.broadinstitute.org/">gnomAD</a> population allele frequencies. 
+            tooltip: (<span><a href="https://gnomad.broadinstitute.org/">gnomAD</a> population allele frequencies.
             Overall population allele frequency is shown. Hover over a frequency to see the frequency for each specific population.</span>),
             defaultSortDirection: "desc",
             visible: false,
@@ -630,8 +624,8 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             download: (d:Mutation[]) => DbsnpColumnFormatter.download(d, this.props.genomeNexusMyVariantInfoCache as GenomeNexusMyVariantInfoCache),
             tooltip: (
                 <span style={{maxWidth:370, display:"block", textAlign:"left"}}>
-                    The Single Nucleotide Polymorphism Database (<a href="https://www.ncbi.nlm.nih.gov/snp/" target="_blank">dbSNP</a>) 
-                    is a free public archive for genetic variation within and across different species. 
+                    The Single Nucleotide Polymorphism Database (<a href="https://www.ncbi.nlm.nih.gov/snp/" target="_blank">dbSNP</a>)
+                    is a free public archive for genetic variation within and across different species.
                     <br />NOTE: Currently only SNPs, single base deletions and insertions are supported.
                 </span>
             ),
@@ -689,7 +683,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             />
         );
     }
-    
+
     protected getMutations() {
         let data:Mutation[][]|undefined = [];
         if (this.props.dataStore) {
