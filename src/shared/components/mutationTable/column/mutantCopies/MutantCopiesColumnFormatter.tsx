@@ -56,8 +56,6 @@ export default class MutantCopiesColumnFormatter {
         for (const mutation of data) {
             sampleToTotalCopyNumber[mutation.sampleId] = hasASCNProperty(mutation, "totalCopyNumber") ? 
                 mutation.alleleSpecificCopyNumber.totalCopyNumber.toString() : "NA";
-        }
-        for (const mutation of data) {
             sampleToMutantCopies[mutation.sampleId] = hasASCNProperty(mutation, "mutantCopies") ?
                  mutation.alleleSpecificCopyNumber.mutantCopies.toString() : "NA";
         }

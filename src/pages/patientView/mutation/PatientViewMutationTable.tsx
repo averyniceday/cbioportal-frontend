@@ -22,6 +22,7 @@ import HeaderIconMenu from "./HeaderIconMenu";
 import GeneFilterMenu, { GeneFilterOption } from "./GeneFilterMenu";
 import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
 import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
+import {getDefaultASCNCopyNumberColumnDefinition} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberColumnFormatter";
 
 export interface IPatientViewMutationTableProps extends IMutationTableProps {
     sampleManager:SampleManager | null;
@@ -130,11 +131,8 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
 
         this._columns[MutationTableColumnType.MUTANT_COPIES] = getDefaultMutantCopiesColumnDefinition(this.getSamples(), this.props.sampleManager ? this.props.sampleManager : undefined);
 
-        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = {
-            name: "Integer Copy #",
-            render:(d:Mutation[])=>PatientASCNCopyNumberColumnFormatter.renderFunction(d,this.props.sampleIdToClinicalDataMap, this.getSamples(), this.props.sampleManager),
-            sortBy:(d:Mutation[])=>ASCNCopyNumberColumnFormatter.getSortValue(d, this.props.sampleIdToClinicalDataMap, this.getSamples())
-        };
+        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition(this.getSamples(), this.props.sampleIdToClinicalDataMap, this.props.sampleManager ? this.props.sampleManager : undefined); 
+        
         // customization for allele count columns
 
         this._columns[MutationTableColumnType.REF_READS_N].render =

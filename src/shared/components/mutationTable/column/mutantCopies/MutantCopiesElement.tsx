@@ -11,7 +11,7 @@ const MutantCopiesElementTooltip: React.FunctionComponent<{
     return (
         <span>
             {props.sampleManager ? (
-                <span>{props.sampleManager.getComponentForSample(props.sampleId, 1, "")}</span>
+                <span>{props.sampleManager.getComponentForSample(props.sampleId, 1, "")}{" "}</span>
             ) : null}
             <span>  
                 {" "}{props.mutantCopiesValue} out of {props.totalCopyNumberValue} copies of this gene are mutated.
