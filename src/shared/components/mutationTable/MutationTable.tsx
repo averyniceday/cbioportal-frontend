@@ -18,7 +18,6 @@ import ProteinChangeColumnFormatter from "./column/ProteinChangeColumnFormatter"
 import MutationTypeColumnFormatter from "./column/MutationTypeColumnFormatter";
 import CancerCellFractionColumnFormatter from "./column/CancerCellFractionColumnFormatter";
 import ASCNMethodColumnFormatter from "./column/ASCNMethodColumnFormatter";
-import MutantCopiesColumnFormatter from "./column/MutantCopiesColumnFormatter";
 import FunctionalImpactColumnFormatter from "./column/FunctionalImpactColumnFormatter";
 import CosmicColumnFormatter from "./column/CosmicColumnFormatter";
 import MutationCountColumnFormatter from "./column/MutationCountColumnFormatter";
@@ -56,6 +55,7 @@ import GnomadColumnFormatter from "./column/GnomadColumnFormatter";
 import ClinVarColumnFormatter from "./column/ClinVarColumnFormatter";
 import DbsnpColumnFormatter from "./column/DbsnpColumnFormatter";
 import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
+import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
 
 
 export interface IMutationTableProps {
@@ -483,13 +483,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             sortBy:(d:Mutation[])=>CancerCellFractionColumnFormatter.getDisplayValue(d)
         };
 
-        this._columns[MutationTableColumnType.MUTANT_COPIES] = {
-            name: "Mutant Copies",
-            tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
-            render:(d:Mutation[])=>MutantCopiesColumnFormatter.renderFunction(d, [d[0].sampleId]),
-            download:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, [d[0].sampleId]),
-            sortBy:(d:Mutation[])=>MutantCopiesColumnFormatter.getDisplayValueAsString(d, [d[0].sampleId])
-        };
+        this._columns[MutationTableColumnType.MUTANT_COPIES] = getDefaultMutantCopiesColumnDefinition();
 
         this._columns[MutationTableColumnType.FUNCTIONAL_IMPACT] = {
             name:"Functional Impact",
