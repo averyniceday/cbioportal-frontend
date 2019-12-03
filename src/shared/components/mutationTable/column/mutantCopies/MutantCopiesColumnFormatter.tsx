@@ -8,17 +8,40 @@ import MutantCopiesElement from "shared/components/mutationTable/column/mutantCo
  * @author Avery Wang
  */
 
+function getSampleIdToMutantCopiesMap(data:Mutation[]):{[key: string]: string} {
+    const sampleToValue:{[key: string]: string} = {};
+    for (const mutation of data) {
+        const value:string = getMutantCopiesValue(mutation);
+        if (value.toString().length > 0) {
+            sampleToValue[mutation.sampleId] = value;
+        }
+    }
+    return sampleToValue;
+}
+
+function getDisplayValueAsString(data:Mutation[], sampleIds:string[]):string {
+    const displayValuesBySample:{[key: string]: string} = getSampleIdToMutantCopiesMap(data);
+    const sampleIdsWithValues = sampleIds.filter(sampleId => displayValuesBySample[sampleId]);
+    const displayValuesAsString = sampleIdsWithValues.map((sampleId:string) => {
+        return displayValuesBySample[sampleId];
+    })
+    return displayValuesAsString.join("; ");
+}
+
+function getMutantCopiesValue(mutation:Mutation):string {
+    return (hasASCNProperty(mutation, "totalCopyNumber") &&
+        hasASCNProperty(mutation, "mutantCopies")) ? mutation.alleleSpecificCopyNumber.mutantCopies.toString() + "/" + mutation.alleleSpecificCopyNumber.totalCopyNumber.toString() : "";
+}
 
 export const getDefaultMutantCopiesColumnDefinition = (sampleIds?: string[], sampleManager?: SampleManager) => {
     return {
         name: "Mutant Copies",
         tooltip: (<span>FACETS Best Guess for Mutant Copies / Total Copies</span>),
         render: (d: Mutation[]) => MutantCopiesColumnFormatter.renderFunction(d, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []), sampleManager),
-        sortBy: (d: Mutation[]) => d.map(m => m.alleleSpecificCopyNumber.ccfMCopiesUpper),
-        download: (d: Mutation[]) => MutantCopiesColumnFormatter.getClonalDownload(d)
+        sortBy: (d: Mutation[]) => getDisplayValueAsString(d, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : [])),
+        download: (d: Mutation[]) => MutantCopiesColumnFormatter.getMutantCopiesDownload(d)
     }
 };
-
 
 export default class MutantCopiesColumnFormatter {
 
@@ -67,7 +90,8 @@ export default class MutantCopiesColumnFormatter {
         );
     }
 
-    public static getClonalDownload(mutations: Mutation[]): string[] {
-        return ["boo"];
-    }
+
+    public static getMutantCopiesDownload(mutations: Mutation[]): string[] {
+         return mutations.map(mutation=>getMutantCopiesValue(mutation));
+     }
 }
