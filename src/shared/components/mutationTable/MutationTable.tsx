@@ -313,7 +313,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             visible: DiscreteCNAColumnFormatter.isVisible(this.props.discreteCNACache as DiscreteCNACache)
         };
 
-        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition();
+        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition(undefined, this.props.sampleIdToClinicalDataMap);
 
         this._columns[MutationTableColumnType.ASCN_METHOD] = {
             name: "ASCN Method",
