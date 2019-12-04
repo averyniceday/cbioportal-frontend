@@ -23,6 +23,7 @@ import GeneFilterMenu, { GeneFilterOption } from "./GeneFilterMenu";
 import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
 import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
 import {getDefaultASCNCopyNumberColumnDefinition} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberColumnFormatter";
+import {getDefaultCancerCellFractionColumnDefinition} from "shared/components/mutationTable/column/cancerCellFraction/CancerCellFractionColumnFormatter";
 
 export interface IPatientViewMutationTableProps extends IMutationTableProps {
     sampleManager:SampleManager | null;
@@ -119,13 +120,8 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
         // due to same variant in multiple samples
         // This can lead to cases where there are multiple icons/tooltips in a single cell
         // therefore patient view needs sampleManager to indicate which values match which samples
-        this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = {
-            name: "CCF",
-            tooltip:(<span>Cancer Cell Fraction</span>),
-            render: (d:Mutation[])=>PatientCancerCellFractionColumnFormatter.renderFunction(d, this.props.sampleManager),
-            sortBy:(d:Mutation[])=>d.map(m=>m.alleleSpecificCopyNumber.ccfMCopies),
-            download:(d:Mutation[])=>CancerCellFractionColumnFormatter.getCancerCellFractionDownload(d)
-        };
+
+        this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = getDefaultCancerCellFractionColumnDefinition(this.getSamples(), this.props.sampleManager ? this.props.sampleManager : undefined);        
 
         this._columns[MutationTableColumnType.CLONAL] = getDefaultClonalColumnDefinition(this.getSamples(), this.props.sampleManager ? this.props.sampleManager : undefined);
 
