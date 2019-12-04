@@ -8,7 +8,7 @@ import ClonalElement from "shared/components/mutationTable/column/clonal/ClonalE
  * @author Avery Wang
  */
 
-enum ClonalValue {
+export enum ClonalValue {
     YES='yes',
     NO='no',
     NA='NA',

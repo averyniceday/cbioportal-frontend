@@ -1,9 +1,11 @@
 import * as React from 'react';
+import {ClonalValue} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
+import ClonalColumnFormatter from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
+import {ClinicalData} from "shared/api/generated/CBioPortalAPI";
 import {Mutation} from "shared/api/generated/CBioPortalAPI";
 import {hasASCNProperty} from "shared/lib/MutationUtils";
 import SampleManager from "pages/patientView/SampleManager";
 import ASCNCopyNumberElement from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberElement";
-import {ASCNCopyNumberIcon} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberElement";
 
 /**
  * @author Avery Wang
@@ -23,7 +25,7 @@ export function getWGD(sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData
     return (wgdData !== undefined && wgdData.length > 0) ? wgdData[0].value : "NA"; 
 }
 
-export const getDefaultASCNCopyNumberColumnDefinition = (sampleIds?: string[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}, sampleManager?: SampleManager) => {
+export const getDefaultASCNCopyNumberColumnDefinition = (sampleIds?: string[], sampleIdToClinicalDataMap?:{[sampleId:string]:ClinicalData[]}, sampleManager?: SampleManager) => {
     return {
         name: "Integer Copy #",
         render: (d: Mutation[]) => ASCNCopyNumberColumnFormatter.renderFunction(d, sampleIdToClinicalDataMap, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []), sampleManager),
@@ -40,7 +42,7 @@ export default class ASCNCopyNumberColumnFormatter {
      * @param data  column formatter data
      * @returns {string}"Clonal" text value
      */
-    public static renderFunction(data: Mutation[], sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}, sampleIds: string[], sampleManager?: SampleManager) {
+    public static renderFunction(data: Mutation[], sampleIdToClinicalDataMap?:{[sampleId:string]:ClinicalData[]}, sampleIds: string[], sampleManager?: SampleManager) {
         const sampleToTotalCopyNumber: { [key: string]: string } = {};
         const sampleToMinorCopyNumber: { [key: string]: string } = {};
         const sampleToASCNCopyNumber: { [key: string]: string } = {};
