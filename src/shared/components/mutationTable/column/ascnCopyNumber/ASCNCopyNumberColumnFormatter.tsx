@@ -57,8 +57,7 @@ export const getDefaultASCNCopyNumberColumnDefinition = (sampleIds?: string[], s
     return {
         name: "Integer Copy #",
         render: (d: Mutation[]) => ASCNCopyNumberColumnFormatter.renderFunction(d, sampleIdToClinicalDataMap, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []), sampleManager),
-        sortBy:(d:Mutation[]) => getSortValue(d, this.props.sampleIdToClinicalDataMap, this.getSamples()),
-        download: (d: Mutation[]) => ClonalColumnFormatter.getClonalDownload(d)
+        sortBy:(d:Mutation[]) => getSortValue(d, sampleIdToClinicalDataMap, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []))
     }
 };
 
@@ -74,6 +73,8 @@ export default class ASCNCopyNumberColumnFormatter {
         const sampleToTotalCopyNumber: { [key: string]: string } = {};
         const sampleToMinorCopyNumber: { [key: string]: string } = {};
         const sampleToASCNCopyNumber: { [key: string]: string } = {};
+
+        console.log("renderFunction() - sampleIds: " + sampleIds);
 
         for (const mutation of data) {
             sampleToTotalCopyNumber[mutation.sampleId] = hasASCNProperty(mutation, "totalCopyNumber") ? 

@@ -56,6 +56,7 @@ import ClinVarColumnFormatter from "./column/ClinVarColumnFormatter";
 import DbsnpColumnFormatter from "./column/DbsnpColumnFormatter";
 import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
 import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
+import {getDefaultASCNCopyNumberColumnDefinition} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberColumnFormatter";
 
 
 export interface IMutationTableProps {
@@ -312,19 +313,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             visible: DiscreteCNAColumnFormatter.isVisible(this.props.discreteCNACache as DiscreteCNACache)
         };
 
-        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = {
-            name: "Integer Copy #",
-            render:(d:Mutation[])=>{
-                return ASCNCopyNumberColumnFormatter.renderFunction(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId]);
-            },
-            sortBy: (d:Mutation[]):string|null=>{
-                if (this.props.discreteCNACache && this.props.molecularProfileIdToMolecularProfile) {
-                    return ASCNCopyNumberColumnFormatter.getSortValue(d, this.props.sampleIdToClinicalDataMap, [d[0].sampleId]);
-                } else {
-                    return "";
-                }
-            }
-        };
+        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition();
 
         this._columns[MutationTableColumnType.ASCN_METHOD] = {
             name: "ASCN Method",
