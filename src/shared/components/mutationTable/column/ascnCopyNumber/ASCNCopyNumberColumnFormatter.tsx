@@ -11,6 +11,34 @@ import ASCNCopyNumberElement from "shared/components/mutationTable/column/ascnCo
  * @author Avery Wang
  */
 
+// gets value displayed in table cell - "NA" if missing attributes needed for calculation
+function getAscnCopyNumberData(mutation:Mutation, sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined) {
+    return hasASCNProperty(mutation, "ascnIntegerCopyNumber") ? mutation.alleleSpecificCopyNumber.ascnIntegerCopyNumber : "NA";
+}
+
+// sort by total copy number (since that is the number displayed in the icon
+function getAllTotalCopyNumberForMutation(data:Mutation[], sampleIdToClinicalDataMap: {[key: string]:ClinicalData[]}|undefined, sampleIds:string[]) {
+    const sampleToCNA:{[key: string]: string} = {};
+    for (const mutation of data) {
+        const ascnCopyNumberData = getAscnCopyNumberData(mutation, sampleIdToClinicalDataMap);
+        if (ascnCopyNumberData !== "NA") {
+            sampleToCNA[mutation.sampleId] = mutation.alleleSpecificCopyNumber.totalCopyNumber.toString();
+        } else {
+            sampleToCNA[mutation.sampleId] = "NA";
+        }
+    }
+    return sampleToCNA;
+}
+
+function getSortValue(data:Mutation[], sampleIdToClinicalDataMap: {[key: string]:ClinicalData[]}|undefined, sampleIds:string[]) {
+    const displayValuesBySample:{[key: string]: string} = getAllTotalCopyNumberForMutation(data, sampleIdToClinicalDataMap, sampleIds);
+    const sampleIdsWithValues = sampleIds.filter(sampleId => displayValuesBySample[sampleId]);
+    const displayValuesAsString = sampleIdsWithValues.map((sampleId:string) => {
+        return displayValuesBySample[sampleId];
+    })
+    return displayValuesAsString.join(";");
+}
+
 function getClonalValue(mutation: Mutation): ClonalValue {
     let textValue: ClonalValue = ClonalValue.NA;
     if (hasASCNProperty(mutation, "clonal")) {
@@ -29,7 +57,7 @@ export const getDefaultASCNCopyNumberColumnDefinition = (sampleIds?: string[], s
     return {
         name: "Integer Copy #",
         render: (d: Mutation[]) => ASCNCopyNumberColumnFormatter.renderFunction(d, sampleIdToClinicalDataMap, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []), sampleManager),
-        sortBy: (d: Mutation[]) => d.map(m => m.alleleSpecificCopyNumber.ccfMCopiesUpper),
+        sortBy:(d:Mutation[]) => getSortValue(d, this.props.sampleIdToClinicalDataMap, this.getSamples()),
         download: (d: Mutation[]) => ClonalColumnFormatter.getClonalDownload(d)
     }
 };
