@@ -49,7 +49,7 @@ const ASCNCallTable:{[key:string]:string} = {
     "WGD,6,3":"Amp"
 }
 
-enum ASCNCopyNumberColor {
+export enum ASCNCopyNumberColor {
     RED='red',
     LIGHTRED='#e15b5b',
     LIGHTGREY='#BCBCBC',
@@ -62,8 +62,8 @@ enum ASCNCopyNumberOpacity {
     TRANSPARENT=0,
     OPAQUE=100
 }
-
-function getASCNCopyNumberColor(ASCNCopyNumberValue: string): ASCNCopyNumberColor {
+// can ascn copy number be a different case than these
+export function getASCNCopyNumberColor(ASCNCopyNumberValue: string): ASCNCopyNumberColor {
     switch (ASCNCopyNumberValue) {
         case '2':
             return ASCNCopyNumberColor.RED;

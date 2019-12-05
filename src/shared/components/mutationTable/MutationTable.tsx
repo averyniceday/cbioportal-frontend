@@ -454,7 +454,7 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
 
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = getDefaultCancerCellFractionColumnDefinition();
 
-        this._columns[MutationTableColumnType.CLONAL] = getDefaultASCNMethodColumnDefinition();
+        this._columns[MutationTableColumnType.CLONAL] = getDefaultClonalColumnDefinition();
 
         this._columns[MutationTableColumnType.ASCN_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition(undefined, this.props.sampleIdToClinicalDataMap);
 

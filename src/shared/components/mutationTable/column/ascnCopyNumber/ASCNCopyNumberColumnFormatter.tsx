@@ -6,6 +6,7 @@ import {Mutation} from "shared/api/generated/CBioPortalAPI";
 import {hasASCNProperty} from "shared/lib/MutationUtils";
 import SampleManager from "pages/patientView/SampleManager";
 import ASCNCopyNumberElement from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberElement";
+import {ASCNCopyNumberColor, getASCNCopyNumberColor} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberElement";
 
 /**
  * @author Avery Wang
@@ -20,8 +21,11 @@ function getAscnCopyNumberData(mutation:Mutation, sampleIdToClinicalDataMap:{[sa
 function getAllTotalCopyNumberForMutation(data:Mutation[], sampleIdToClinicalDataMap: {[key: string]:ClinicalData[]}|undefined, sampleIds:string[]) {
     const sampleToCNA:{[key: string]: string} = {};
     for (const mutation of data) {
-        const ascnCopyNumberData = getAscnCopyNumberData(mutation, sampleIdToClinicalDataMap);
-        if (ascnCopyNumberData !== "NA") {
+        const ascnCopyNumberValue = getAscnCopyNumberData(mutation, sampleIdToClinicalDataMap);
+        if (ascnCopyNumberValue !== "NA" &&
+            hasASCNProperty(mutation, "totalCopyNumber") &&
+            getWGD(sampleIdToClinicalDataMap, mutation.sampleId) !== "NA" &&
+            getASCNCopyNumberColor(ascnCopyNumberValue.toString()) !== ASCNCopyNumberColor.BLACK) {
             sampleToCNA[mutation.sampleId] = mutation.alleleSpecificCopyNumber.totalCopyNumber.toString();
         } else {
             sampleToCNA[mutation.sampleId] = "NA";
@@ -39,14 +43,6 @@ function getSortValue(data:Mutation[], sampleIdToClinicalDataMap: {[key: string]
     return displayValuesAsString.join(";");
 }
 
-function getClonalValue(mutation: Mutation): ClonalValue {
-    let textValue: ClonalValue = ClonalValue.NA;
-    if (hasASCNProperty(mutation, "clonal")) {
-        textValue = mutation.alleleSpecificCopyNumber.clonal ? ClonalValue.YES : ClonalValue.NO;
-    }
-    return textValue;
-}
-
 export function getWGD(sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData[]}|undefined, sampleId:string) {
     let wgdData = sampleIdToClinicalDataMap ?  
         sampleIdToClinicalDataMap[sampleId].filter((cd: ClinicalData) => cd.clinicalAttributeId === "FACETS_WGD") : undefined;
@@ -60,7 +56,6 @@ export const getDefaultASCNCopyNumberColumnDefinition = (sampleIds?: string[], s
         sortBy:(d:Mutation[]) => getSortValue(d, sampleIdToClinicalDataMap, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []))
     }
 };
-
 
 export default class ASCNCopyNumberColumnFormatter {
 
@@ -107,7 +102,4 @@ export default class ASCNCopyNumberColumnFormatter {
         );
     }
 
-    public static getClonalDownload(mutations: Mutation[]): string[] {
-        return mutations.map(mutation=>getClonalValue(mutation));
-    }
 }
