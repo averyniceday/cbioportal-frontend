@@ -31,7 +31,7 @@ export default class ResultsViewMutationTable extends MutationTable<IResultsView
             MutationTableColumnType.SAMPLE_ID,
             MutationTableColumnType.COPY_NUM,
             MutationTableColumnType.ASCN_METHOD,
-            MutationTableColumnType.FACETS_COPY_NUM,
+            MutationTableColumnType.ASCN_COPY_NUM,
             MutationTableColumnType.ANNOTATION,
             MutationTableColumnType.FUNCTIONAL_IMPACT,
             MutationTableColumnType.REF_READS_N,
@@ -91,7 +91,7 @@ export default class ResultsViewMutationTable extends MutationTable<IResultsView
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION].order = 46;
         this._columns[MutationTableColumnType.MUTANT_COPIES].order = 47;
         this._columns[MutationTableColumnType.COPY_NUM].order = 49;
-        this._columns[MutationTableColumnType.FACETS_COPY_NUM].order = 51;
+        this._columns[MutationTableColumnType.ASCN_COPY_NUM].order = 51;
         this._columns[MutationTableColumnType.COSMIC].order = 60;
         this._columns[MutationTableColumnType.MUTATION_STATUS].order = 70;
         this._columns[MutationTableColumnType.VALIDATION_STATUS].order = 80;

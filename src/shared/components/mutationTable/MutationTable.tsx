@@ -10,14 +10,11 @@ import NormalAlleleFreqColumnFormatter from "./column/NormalAlleleFreqColumnForm
 import MrnaExprColumnFormatter from "./column/MrnaExprColumnFormatter";
 import CohortColumnFormatter from "./column/CohortColumnFormatter";
 import DiscreteCNAColumnFormatter from "./column/DiscreteCNAColumnFormatter";
-import ASCNCopyNumberColumnFormatter from "./column/ASCNCopyNumberColumnFormatter";
 import AlleleCountColumnFormatter from "./column/AlleleCountColumnFormatter";
 import GeneColumnFormatter from "./column/GeneColumnFormatter";
 import ChromosomeColumnFormatter from "./column/ChromosomeColumnFormatter";
 import ProteinChangeColumnFormatter from "./column/ProteinChangeColumnFormatter";
 import MutationTypeColumnFormatter from "./column/MutationTypeColumnFormatter";
-import CancerCellFractionColumnFormatter from "./column/CancerCellFractionColumnFormatter";
-import ASCNMethodColumnFormatter from "./column/ASCNMethodColumnFormatter";
 import FunctionalImpactColumnFormatter from "./column/FunctionalImpactColumnFormatter";
 import CosmicColumnFormatter from "./column/CosmicColumnFormatter";
 import MutationCountColumnFormatter from "./column/MutationCountColumnFormatter";
@@ -54,10 +51,11 @@ import {CancerGene} from "public-lib/api/generated/OncoKbAPI";
 import GnomadColumnFormatter from "./column/GnomadColumnFormatter";
 import ClinVarColumnFormatter from "./column/ClinVarColumnFormatter";
 import DbsnpColumnFormatter from "./column/DbsnpColumnFormatter";
+import {getDefaultASCNCopyNumberColumnDefinition} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberColumnFormatter";
+import {getDefaultASCNMethodColumnDefinition} from "shared/components/mutationTable/column/ascnMethod/ASCNMethodColumnFormatter";
+import {getDefaultCancerCellFractionColumnDefinition} from "shared/components/mutationTable/column/cancerCellFraction/CancerCellFractionColumnFormatter";
 import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
 import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
-import {getDefaultASCNCopyNumberColumnDefinition} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberColumnFormatter";
-
 
 export interface IMutationTableProps {
     studyIdToStudy?: {[studyId:string]:CancerStudy};
@@ -128,7 +126,7 @@ export enum MutationTableColumnType {
     ANNOTATION,
     COSMIC,
     COPY_NUM,
-    FACETS_COPY_NUM,
+    ASCN_COPY_NUM,
     ASCN_METHOD,
     MRNA_EXPR,
     COHORT,
@@ -313,16 +311,6 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
             visible: DiscreteCNAColumnFormatter.isVisible(this.props.discreteCNACache as DiscreteCNACache)
         };
 
-        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition(undefined, this.props.sampleIdToClinicalDataMap);
-
-        this._columns[MutationTableColumnType.ASCN_METHOD] = {
-            name: "ASCN Method",
-            tooltip: (<span>Allele Specific Copy Number Method</span>),
-            render:ASCNMethodColumnFormatter.renderFunction,
-            download:ASCNMethodColumnFormatter.getASCNMethodValue,
-            sortBy:(d:Mutation[])=>ASCNMethodColumnFormatter.getDisplayValue(d),
-        };
-
         this._columns[MutationTableColumnType.REF_READS_N] = {
             name: "Ref Reads (Normal)",
             render: (d:Mutation[])=>AlleleCountColumnFormatter.renderFunction(d, [d[0].sampleId], "normalRefCount"),
@@ -462,15 +450,13 @@ export default class MutationTable<P extends IMutationTableProps> extends React.
                 MutationTypeColumnFormatter.getDisplayValue(d).toUpperCase().indexOf(filterStringUpper) > -1
         };
 
-        this._columns[MutationTableColumnType.CLONAL] = getDefaultClonalColumnDefinition();
+        this._columns[MutationTableColumnType.ASCN_METHOD] = getDefaultASCNMethodColumnDefinition();
 
-        this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = {
-            name: "CCF",
-            tooltip: (<span>FACETS Cancer Cell Fraction</span>),
-            render:CancerCellFractionColumnFormatter.renderFunction,
-            download:CancerCellFractionColumnFormatter.getCancerCellFractionValue,
-            sortBy:(d:Mutation[])=>CancerCellFractionColumnFormatter.getDisplayValue(d)
-        };
+        this._columns[MutationTableColumnType.CANCER_CELL_FRACTION] = getDefaultCancerCellFractionColumnDefinition();
+
+        this._columns[MutationTableColumnType.CLONAL] = getDefaultASCNMethodColumnDefinition();
+
+        this._columns[MutationTableColumnType.ASCN_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition(undefined, this.props.sampleIdToClinicalDataMap);
 
         this._columns[MutationTableColumnType.MUTANT_COPIES] = getDefaultMutantCopiesColumnDefinition();
 

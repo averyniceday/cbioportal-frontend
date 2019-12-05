@@ -17,7 +17,7 @@ export const getDefaultCancerCellFractionColumnDefinition = (sampleIds?: string[
         name: "CCF",
         tooltip:(<span>Cancer Cell Fraction</span>),
         render: (d:Mutation[])=>CancerCellFractionColumnFormatter.renderFunction(d, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []), sampleManager),
-        //sortBy:(d:Mutation[])=>d.map(m=>m.alleleSpecificCopyNumber.ccfMCopies),
+        sortBy:(d:Mutation[])=>d.map(m=>(+getCancerCellFractionValue(m))),
         download:(d:Mutation[])=>CancerCellFractionColumnFormatter.getCancerCellFractionDownload(d)
     }
 };

@@ -8,11 +8,7 @@ import SampleManager from "../SampleManager";
 import {Mutation, ClinicalData, MolecularProfile} from "shared/api/generated/CBioPortalAPI";
 import AlleleCountColumnFormatter from "shared/components/mutationTable/column/AlleleCountColumnFormatter";
 import DiscreteCNAColumnFormatter from "shared/components/mutationTable/column/DiscreteCNAColumnFormatter";
-import ASCNCopyNumberColumnFormatter from "shared/components/mutationTable/column/ASCNCopyNumberColumnFormatter";
-import CancerCellFractionColumnFormatter from "shared/components/mutationTable/column/CancerCellFractionColumnFormatter";
-import PatientASCNCopyNumberColumnFormatter from "./column/PatientASCNCopyNumberColumnFormatter";
 import AlleleFreqColumnFormatter from "./column/AlleleFreqColumnFormatter";
-import PatientCancerCellFractionColumnFormatter from "./column/PatientCancerCellFractionColumnFormatter";
 import TumorColumnFormatter from "./column/TumorColumnFormatter";
 import {isUncalled} from "shared/lib/MutationUtils";
 import {floatValueIsNA} from "shared/lib/NumberUtils";
@@ -20,10 +16,10 @@ import TumorAlleleFreqColumnFormatter from "shared/components/mutationTable/colu
 import ExonColumnFormatter from "shared/components/mutationTable/column/ExonColumnFormatter";
 import HeaderIconMenu from "./HeaderIconMenu";
 import GeneFilterMenu, { GeneFilterOption } from "./GeneFilterMenu";
-import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
-import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
 import {getDefaultASCNCopyNumberColumnDefinition} from "shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberColumnFormatter";
 import {getDefaultCancerCellFractionColumnDefinition} from "shared/components/mutationTable/column/cancerCellFraction/CancerCellFractionColumnFormatter";
+import {getDefaultClonalColumnDefinition} from "shared/components/mutationTable/column/clonal/ClonalColumnFormatter";
+import {getDefaultMutantCopiesColumnDefinition} from "shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter";
 
 export interface IPatientViewMutationTableProps extends IMutationTableProps {
     sampleManager:SampleManager | null;
@@ -53,7 +49,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
             MutationTableColumnType.MRNA_EXPR,
             MutationTableColumnType.COPY_NUM,
             MutationTableColumnType.ASCN_METHOD,
-            MutationTableColumnType.FACETS_COPY_NUM,
+            MutationTableColumnType.ASCN_COPY_NUM,
             MutationTableColumnType.ANNOTATION,
             MutationTableColumnType.REF_READS_N,
             MutationTableColumnType.VAR_READS_N,
@@ -127,7 +123,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
 
         this._columns[MutationTableColumnType.MUTANT_COPIES] = getDefaultMutantCopiesColumnDefinition(this.getSamples(), this.props.sampleManager ? this.props.sampleManager : undefined);
 
-        this._columns[MutationTableColumnType.FACETS_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition(this.getSamples(), this.props.sampleIdToClinicalDataMap, this.props.sampleManager ? this.props.sampleManager : undefined); 
+        this._columns[MutationTableColumnType.ASCN_COPY_NUM] = getDefaultASCNCopyNumberColumnDefinition(this.getSamples(), this.props.sampleIdToClinicalDataMap, this.props.sampleManager ? this.props.sampleManager : undefined); 
         
         // customization for allele count columns
 
@@ -188,7 +184,7 @@ export default class PatientViewMutationTable extends MutationTable<IPatientView
         this._columns[MutationTableColumnType.VAR_READS_N].order = 170;
         this._columns[MutationTableColumnType.REF_READS_N].order = 175;
         this._columns[MutationTableColumnType.COPY_NUM].order = 177;
-        this._columns[MutationTableColumnType.FACETS_COPY_NUM].order = 181;
+        this._columns[MutationTableColumnType.ASCN_COPY_NUM].order = 181;
         this._columns[MutationTableColumnType.MRNA_EXPR].order = 182;
         this._columns[MutationTableColumnType.COHORT].order = 183;
         this._columns[MutationTableColumnType.COSMIC].order = 184;
