@@ -20,17 +20,11 @@ const CancerCellFractionElementTooltip: React.FunctionComponent<{
         width:40,
         display: 'inline-block'
     };
+    const sampleOrder = props.sampleManager ? props.sampleManager.getSampleIdsInOrder() : [];
+    const orderedSamplesWithValues = sampleOrder.filter((sampleId, index, array)=>{ return props.sampleToCCFValue[sampleId] });
+    const tooltipLines = orderedSamplesWithValues.map((sampleId, index, array)=>(<span key={sampleId}>{ props.sampleManager ? (props.sampleManager.getComponentForSample(sampleId, 1, "")) : null } {props.sampleToCCFValue[sampleId]}<br/></span>));
     return (
-        <div>
-            {props.sampleManager ? (
-                <div>
-                    {props.sampleManager.getComponentForSample(props.sampleIds[0], 1, "")}
-                </div>
-            ) : null}
-            <div>
-                <span style={firstColumnStyle}>CancerCellFraction</span>
-            </div>
-        </div>
+            <span>{tooltipLines}</span>
     );
 };
 
