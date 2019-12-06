@@ -16,10 +16,6 @@ const CancerCellFractionElementTooltip: React.FunctionComponent<{
     sampleToCCFValue: any,
     sampleManager?: SampleManager
 }> = (props) => {
-    const firstColumnStyle={
-        width:40,
-        display: 'inline-block'
-    };
     const sampleOrder = props.sampleManager ? props.sampleManager.getSampleIdsInOrder() : [];
     const orderedSamplesWithValues = sampleOrder.filter((sampleId, index, array)=>{ return props.sampleToCCFValue[sampleId] });
     const tooltipLines = orderedSamplesWithValues.map((sampleId, index, array)=>(<span key={sampleId}>{ props.sampleManager ? (props.sampleManager.getComponentForSample(sampleId, 1, "")) : null } {props.sampleToCCFValue[sampleId]}<br/></span>));
@@ -39,9 +35,6 @@ const CancerCellFractionBar: React.FunctionComponent<{
         <rect x={props.barX} y={barY} width={barWidth} height={barHeight} fill={props.color}/>
     )
 };
-
-
-
 
 const CancerCellFractionBarGraph: React.FunctionComponent<{
     sampleIds: string[],
