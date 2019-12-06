@@ -52,7 +52,7 @@ export function getWGD(sampleIdToClinicalDataMap:{[sampleId:string]:ClinicalData
 export const getDefaultASCNCopyNumberColumnDefinition = (sampleIds?: string[], sampleIdToClinicalDataMap?:{[sampleId:string]:ClinicalData[]}, sampleManager?: SampleManager) => {
     return {
         name: "Integer Copy #",
-        render: (d: Mutation[]) => ASCNCopyNumberColumnFormatter.renderFunction(d, sampleIdToClinicalDataMap, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []), sampleManager),
+        render: (d: Mutation[]) => ASCNCopyNumberColumnFormatter.renderFunction(d, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []), sampleIdToClinicalDataMap, sampleManager),
         sortBy:(d:Mutation[]) => getSortValue(d, sampleIdToClinicalDataMap, sampleIds ? sampleIds : (d.length > 0 ? [d[0].sampleId] : []))
     }
 };
@@ -64,12 +64,10 @@ export default class ASCNCopyNumberColumnFormatter {
      * @param data  column formatter data
      * @returns {string}"Clonal" text value
      */
-    public static renderFunction(data: Mutation[], sampleIdToClinicalDataMap?:{[sampleId:string]:ClinicalData[]}, sampleIds: string[], sampleManager?: SampleManager) {
+    public static renderFunction(data: Mutation[], sampleIds: string[], sampleIdToClinicalDataMap?:{[sampleId:string]:ClinicalData[]}, sampleManager?: SampleManager) {
         const sampleToTotalCopyNumber: { [key: string]: string } = {};
         const sampleToMinorCopyNumber: { [key: string]: string } = {};
         const sampleToASCNCopyNumber: { [key: string]: string } = {};
-
-        console.log("renderFunction() - sampleIds: " + sampleIds);
 
         for (const mutation of data) {
             sampleToTotalCopyNumber[mutation.sampleId] = hasASCNProperty(mutation, "totalCopyNumber") ? 
