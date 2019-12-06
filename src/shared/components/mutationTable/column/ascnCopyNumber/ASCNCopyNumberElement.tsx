@@ -93,7 +93,6 @@ function getASCNCopyNumberOpacity(ASCNCopyNumberValue: string): ASCNCopyNumberOp
     }
 }
 
-
 function getASCNCopyNumberCall(wgdValue: string, totalCopyNumberValue: string, minorCopyNumberValue: string) {
     const majorCopyNumberValue: string = (+totalCopyNumberValue - +minorCopyNumberValue).toString(); 
     const key: string = [wgdValue, majorCopyNumberValue, minorCopyNumberValue].join(',');

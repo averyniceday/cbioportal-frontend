@@ -88,7 +88,6 @@ export default class MutantCopiesColumnFormatter {
         );
     }
 
-
     public static getMutantCopiesDownload(mutations: Mutation[]): string[] {
          return mutations.map(mutation=>getMutantCopiesValue(mutation));
      }

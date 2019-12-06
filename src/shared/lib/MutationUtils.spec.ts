@@ -136,7 +136,7 @@ describe('MutationUtils', () => {
         ];
             
     });
-    
+
     describe('groupMutationsByGeneAndPatientAndProteinChange', () => {
         it("groups mutations correctly by gene, patient, and protein change", () => {
             const grouped = groupMutationsByGeneAndPatientAndProteinChange(mutationsToCount);

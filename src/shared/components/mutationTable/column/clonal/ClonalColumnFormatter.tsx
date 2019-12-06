@@ -32,7 +32,6 @@ export const getDefaultClonalColumnDefinition = (sampleIds?: string[], sampleMan
     }
 };
 
-
 export default class ClonalColumnFormatter {
 
     /* Determines the display value by using the impact field.
