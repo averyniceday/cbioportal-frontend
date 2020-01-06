@@ -30,13 +30,7 @@ export default class ASCNMethodColumnFormatter {
      * @returns {string}"ASCNMethod" text value
      */
     public static renderFunction(data: Mutation[]) {
-        return (
-            <>
-                <span>
-                    {getASCNMethodValue(data[0])}
-                </span>
-            </>
-        );
+        return <span>{getASCNMethodValue(data[0])}</span>;
     }
 
     public static getASCNMethodDownload(mutations: Mutation[]): string[] {

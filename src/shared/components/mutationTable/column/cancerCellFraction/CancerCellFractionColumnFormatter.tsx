@@ -36,17 +36,13 @@ export default class CancerCellFractionColumnFormatter {
             sampleToCCFValue[mutation.sampleId] = hasASCNProperty(mutation, "ccfMCopies") ? mutation.alleleSpecificCopyNumber.ccfMCopies.toString() : "NA";
         }
         return (
-            <>
-                {
-                    <span>
-                        <CancerCellFractionElement
-                            sampleIds={sampleIds}
-                            sampleToCCFValue={sampleToCCFValue}
-                            sampleManager={sampleManager}
-                        />
-                    </span>
-                }
-            </>
+            <span>
+                <CancerCellFractionElement
+                    sampleIds={sampleIds}
+                    sampleToCCFValue={sampleToCCFValue}
+                    sampleManager={sampleManager}
+                />
+            </span>
         );
     }
 

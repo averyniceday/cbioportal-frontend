@@ -12,7 +12,7 @@ function getSampleIdToMutantCopiesMap(data:Mutation[]):{[key: string]: string} {
     const sampleToValue:{[key: string]: string} = {};
     for (const mutation of data) {
         const value:string = getMutantCopiesValue(mutation);
-        if (value.toString().length > 0) {
+        if (value.length > 0) {
             sampleToValue[mutation.sampleId] = value;
         }
     }
@@ -72,7 +72,7 @@ export default class MutantCopiesColumnFormatter {
                 {
                     samplesWithValue.map((sampleId: string, index: number) => {
                         return (
-                            <span style={index === 0 ? undefined : {marginLeft: 5}}>
+                            <span key={sampleId} style={index === 0 ? undefined : {marginLeft: 5}}>
                                 <MutantCopiesElement
                                     sampleId={sampleId}
                                     totalCopyNumberValue={sampleToTotalCopyNumber[sampleId]}

@@ -1,83 +1,83 @@
 import * as React from 'react';
 import DefaultTooltip from "public-lib/components/defaultTooltip/DefaultTooltip";
 import SampleManager from "pages/patientView/SampleManager";
+import { ASCN_BLACK } from "shared/lib/Colors";
+import { getASCNCopyNumberColor } from "shared/lib/ASCNUtils";
 
-const ASCNCallTable:{[key:string]:string} = {
-    "no WGD,0,0":"Homiodel",
-    "no WGD,1,0":"Hetloss",
-    "no WGD,2,0":"CNLOH",
-    "no WGD,3,0":"CNLOH & Gain",
-    "no WGD,4,0":"CNLOH & Gain",
-    "no WGD,5,0":"Amp (LOH)",
-    "no WGD,6,0":"Amp (LOH)",
-    "no WGD,1,1":"Diploid",
-    "no WGD,2,1":"Gain",
-    "no WGD,3,1":"Gain",
-    "no WGD,4,1":"Amp",
-    "no WGD,5,1":"Amp",
-    "no WGD,6,1":"Amp",
-    "no WGD,2,2":"Tetraploid",
-    "no WGD,3,2":"Amp",
-    "no WGD,4,2":"Amp",
-    "no WGD,5,2":"Amp",
-    "no WGD,6,2":"Amp",
-    "no WGD,3,3":"Amp (Balanced)",
-    "no WGD,4,3":"Amp",
-    "no WGD,5,3":"Amp",
-    "no WGD,6,3":"Amp",
-    "WGD,0,0":"Homdel",
-    "WGD,1,0":"Loss Before & After",
-    "WGD,2,0":"Loss Before",
-    "WGD,3,0":"CNLOH Before & Loss",
-    "WGD,4,0":"CNLOH Before",
-    "WGD,5,0":"CNLOH Before & Gain",
-    "WGD,6,0":"Amp (LOH)",
-    "WGD,1,1":"Double Loss After",
-    "WGD,2,1":"Loss After",
-    "WGD,3,1":"CNLOH After",
-    "WGD,4,1":"Loss & Gain",
-    "WGD,5,1":"Amp",
-    "WGD,6,1":"Amp",
-    "WGD,2,2":"Tetraploid",
-    "WGD,3,2":"Gain",
-    "WGD,4,2":"Amp",
-    "WGD,5,2":"Amp",
-    "WGD,6,2":"Amp",
-    "WGD,3,3":"Amp (Balanced)",
-    "WGD,4,3":"Amp",
-    "WGD,5,3":"Amp",
-    "WGD,6,3":"Amp"
+export enum ASCNCopyNumberValue {
+    WGD="WGD",
+    NA="NA",
+    AMPBALANCED="Amp (Balanced)",
+    AMPLOH="Amp (LOH)",
+    AMP="Amp",
+    CNLOHGAIN="CNLOH & Gain",
+    CNLOHAFTER="CNLOH After",
+    CNLOHBEFOREGAIN="CNLOH Before & Gain",
+    CNLOHBEFORELOSS="CNLOH Before & Loss",
+    CNLOHBEFORE="CNLOH Before",
+    CNLOH="CNLOH",
+    DIPLOID="Diploid",
+    DOUBLELOSSAFTER="Double Loss After",
+    GAIN="Gain",
+    HETLOSS="Hetloss",
+    HOMDEL="Homdel",
+    LOSSGAIN="Loss & Gain",
+    LOSSAFTER="Loss After",
+    LOSSBEFOREAFTER="Loss Before & After",
+    LOSSBEFORE="Loss Before",
+    TETRAPLOID="Tetraploid"
 }
 
-export enum ASCNCopyNumberColor {
-    RED='red',
-    LIGHTRED='#e15b5b',
-    LIGHTGREY='#BCBCBC',
-    LIGHTBLUE='#2a5eea',
-    BLUE='blue',
-    BLACK='black'
+const ASCNCallTable:{[key:string]:string} = {
+    "no WGD,0,0":ASCNCopyNumberValue.HOMDEL,
+    "no WGD,1,0":ASCNCopyNumberValue.HETLOSS,
+    "no WGD,2,0":ASCNCopyNumberValue.CNLOH,
+    "no WGD,3,0":ASCNCopyNumberValue.CNLOHGAIN,
+    "no WGD,4,0":ASCNCopyNumberValue.CNLOHGAIN,
+    "no WGD,5,0":ASCNCopyNumberValue.AMPLOH,
+    "no WGD,6,0":ASCNCopyNumberValue.AMPLOH,
+    "no WGD,1,1":ASCNCopyNumberValue.DIPLOID,
+    "no WGD,2,1":ASCNCopyNumberValue.GAIN,
+    "no WGD,3,1":ASCNCopyNumberValue.GAIN,
+    "no WGD,4,1":ASCNCopyNumberValue.AMP,
+    "no WGD,5,1":ASCNCopyNumberValue.AMP,
+    "no WGD,6,1":ASCNCopyNumberValue.AMP,
+    "no WGD,2,2":ASCNCopyNumberValue.TETRAPLOID,
+    "no WGD,3,2":ASCNCopyNumberValue.AMP,
+    "no WGD,4,2":ASCNCopyNumberValue.AMP,
+    "no WGD,5,2":ASCNCopyNumberValue.AMP,
+    "no WGD,6,2":ASCNCopyNumberValue.AMP,
+    "no WGD,3,3":ASCNCopyNumberValue.AMPBALANCED,
+    "no WGD,4,3":ASCNCopyNumberValue.AMP,
+    "no WGD,5,3":ASCNCopyNumberValue.AMP,
+    "no WGD,6,3":ASCNCopyNumberValue.AMP,
+    "WGD,0,0":ASCNCopyNumberValue.HOMDEL,
+    "WGD,1,0":ASCNCopyNumberValue.LOSSBEFOREAFTER,
+    "WGD,2,0":ASCNCopyNumberValue.LOSSBEFORE,
+    "WGD,3,0":ASCNCopyNumberValue.CNLOHBEFORELOSS,
+    "WGD,4,0":ASCNCopyNumberValue.CNLOHBEFORE,
+    "WGD,5,0":ASCNCopyNumberValue.CNLOHBEFOREGAIN,
+    "WGD,6,0":ASCNCopyNumberValue.AMPLOH,
+    "WGD,1,1":ASCNCopyNumberValue.DOUBLELOSSAFTER,
+    "WGD,2,1":ASCNCopyNumberValue.LOSSAFTER,
+    "WGD,3,1":ASCNCopyNumberValue.CNLOHAFTER,
+    "WGD,4,1":ASCNCopyNumberValue.LOSSGAIN,
+    "WGD,5,1":ASCNCopyNumberValue.AMP,
+    "WGD,6,1":ASCNCopyNumberValue.AMP,
+    "WGD,2,2":ASCNCopyNumberValue.TETRAPLOID,
+    "WGD,3,2":ASCNCopyNumberValue.GAIN,
+    "WGD,4,2":ASCNCopyNumberValue.AMP,
+    "WGD,5,2":ASCNCopyNumberValue.AMP,
+    "WGD,6,2":ASCNCopyNumberValue.AMP,
+    "WGD,3,3":ASCNCopyNumberValue.AMPBALANCED,
+    "WGD,4,3":ASCNCopyNumberValue.AMP,
+    "WGD,5,3":ASCNCopyNumberValue.AMP,
+    "WGD,6,3":ASCNCopyNumberValue.AMP
 }
 
 enum ASCNCopyNumberOpacity {
     TRANSPARENT=0,
     OPAQUE=100
-}
-// can ascn copy number be a different case than these
-export function getASCNCopyNumberColor(ASCNCopyNumberValue: string): ASCNCopyNumberColor {
-    switch (ASCNCopyNumberValue) {
-        case '2':
-            return ASCNCopyNumberColor.RED;
-        case '1':
-            return ASCNCopyNumberColor.LIGHTRED;
-        case '0':
-            return ASCNCopyNumberColor.LIGHTGREY;
-        case '-1':
-            return ASCNCopyNumberColor.LIGHTBLUE;
-        case '2':
-            return ASCNCopyNumberColor.BLUE;
-        default:
-            return ASCNCopyNumberColor.BLACK;
-    }
 }
 
 function getASCNCopyNumberOpacity(ASCNCopyNumberValue: string): ASCNCopyNumberOpacity {
@@ -94,9 +94,9 @@ function getASCNCopyNumberOpacity(ASCNCopyNumberValue: string): ASCNCopyNumberOp
 }
 
 function getASCNCopyNumberCall(wgdValue: string, totalCopyNumberValue: string, minorCopyNumberValue: string) {
-    const majorCopyNumberValue: string = (+totalCopyNumberValue - +minorCopyNumberValue).toString(); 
+    const majorCopyNumberValue: string = (Number(totalCopyNumberValue) - Number(minorCopyNumberValue)).toString(); 
     const key: string = [wgdValue, majorCopyNumberValue, minorCopyNumberValue].join(',');
-    return key in ASCNCallTable ? ASCNCallTable[key].toLowerCase() : "NA"; 
+    return key in ASCNCallTable ? ASCNCallTable[key].toLowerCase() : ASCNCopyNumberValue.NA; 
 }
 
 const ASCNCopyNumberElementTooltip: React.FunctionComponent<{
@@ -115,7 +115,7 @@ const ASCNCopyNumberElementTooltip: React.FunctionComponent<{
             ) : null}
             <span>
                 <b>{ascnCopyNumberCall}</b>
-                {ascnCopyNumberCall !== "NA" ? (
+                {ascnCopyNumberCall !== ASCNCopyNumberValue.NA ? (
                     <span>{" "}({props.wgdValue} with total copy number of {props.totalCopyNumberValue} and a minor copy number of {props.minorCopyNumberValue})</span>
                 ) : null }
             </span>
@@ -130,7 +130,7 @@ const ASCNCopyNumberIcon: React.FunctionComponent<{
 }> = (props) => {
     return (
         <svg width='18' height='20' className='case-label-header'>
-            {props.wgdValue === "WGD" ? (
+            {props.wgdValue === ASCNCopyNumberValue.WGD ? (
                 <svg>
                     <text x='9' y='5' dominantBaseline='middle' fontWeight='bold' textAnchor='middle' fontSize='7' fill='black'>WGD</text>
                 </svg>
@@ -156,10 +156,10 @@ const ASCNCopyNumberElement: React.FunctionComponent<{
     ascnCopyNumberValue: string,
     sampleManager?: SampleManager
 }> = (props) => {
-    let hasAllRequiredValues: boolean = props.totalCopyNumberValue !== "NA" &&
-        props.ascnCopyNumberValue !== "NA" &&
-        props.wgdValue !== "NA" &&
-        getASCNCopyNumberColor(props.ascnCopyNumberValue) !== ASCNCopyNumberColor.BLACK;
+    const hasAllRequiredValues: boolean = props.totalCopyNumberValue !== ASCNCopyNumberValue.NA &&
+        props.ascnCopyNumberValue !== ASCNCopyNumberValue.NA &&
+        props.wgdValue !== ASCNCopyNumberValue.NA &&
+        getASCNCopyNumberColor(props.ascnCopyNumberValue) !== ASCN_BLACK;
 
     if (hasAllRequiredValues) {
         return (
@@ -177,9 +177,9 @@ const ASCNCopyNumberElement: React.FunctionComponent<{
         return (
             <span>
                 <ASCNCopyNumberIcon
-                    wgdValue="NA"
+                    wgdValue={ASCNCopyNumberValue.NA}
                     totalCopyNumberValue=""
-                    ascnCopyNumberValue="NA"
+                    ascnCopyNumberValue={ASCNCopyNumberValue.NA}
                 />
             </span>
         )

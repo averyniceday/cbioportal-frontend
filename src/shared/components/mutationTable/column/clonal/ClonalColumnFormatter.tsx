@@ -59,7 +59,7 @@ export default class ClonalColumnFormatter {
                 {
                     samplesWithValue.map((sampleId: string, index: number) => {
                         return (
-                            <span style={index === 0 ? undefined : {marginLeft: 5}}>
+                            <span key={sampleId} style={index === 0 ? undefined : {marginLeft: 5}}>
                                 <ClonalElement
                                     sampleId={sampleId}
                                     clonalValue={sampleToValue[sampleId]}
