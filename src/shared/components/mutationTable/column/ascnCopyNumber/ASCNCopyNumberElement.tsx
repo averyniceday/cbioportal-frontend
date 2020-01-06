@@ -175,7 +175,8 @@ const ASCNCopyNumberElement: React.FunctionComponent<{
     } else {
         return (
             <span>
-                <ASCNCopyNumberIcon wgdValue="NA"
+                <ASCNCopyNumberIcon
+                    wgdValue="NA"
                     totalCopyNumberValue=""
                     ascnCopyNumberValue="NA"/>
             </span>
