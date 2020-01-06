@@ -165,7 +165,8 @@ const ASCNCopyNumberElement: React.FunctionComponent<{
         return (
             <DefaultTooltip overlay={<ASCNCopyNumberElementTooltip {...props}/>} placement="left">
                 <span>
-                    <ASCNCopyNumberIcon wgdValue={props.wgdValue}
+                    <ASCNCopyNumberIcon
+                        wgdValue={props.wgdValue}
                         totalCopyNumberValue={props.totalCopyNumberValue}
                         ascnCopyNumberValue={props.ascnCopyNumberValue}
                     />
