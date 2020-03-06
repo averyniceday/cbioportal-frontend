@@ -127,7 +127,7 @@ export default class ASCNCopyNumberColumnFormatter {
     public static renderFunction(
         data: Mutation[],
         sampleIds: string[],
-        sampleIdToClinicalDataMap?: { [sampleId: string]: ClinicalData[] },
+        sampleIdToClinicalDataMap: { [sampleId: string]: ClinicalData[] },
         sampleManager?: SampleManager
     ) {
         const sampleToTotalCopyNumber: { [key: string]: string } = {};
