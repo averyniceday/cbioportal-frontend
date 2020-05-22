@@ -253,34 +253,26 @@ describe('ASCNCopyNumberColumnFormatter', () => {
         value: 'NO_WGD',
     });
 
-    // MobxPromise<{ [x: string]: ClinicalData[]; }>;
-    // MobxPromise<{ [sampleId: string]: ClinicalData[]}>
-    //
-    // readonly mutationMolecularProfile = remoteData({
-    //     await: () => [this.molecularProfilesInStudy],
-    //     invoke: async () =>
-    //         findMutationMolecularProfile(
-    //             this.molecularProfilesInStudy,
-    //             this.studyId
-    //         ),
-    // });
-
-    const s1NoWgdClinicalDataMap = remoteData(
+    const s1NoWgdClinicalDataMap: MobxPromise<{
+        [sampleId: string]: ClinicalData[];
+    }> =
+        // THIS IS THE PROMISE OBJECT MAP WE WANT TO MOCK
         {
-            invoke: () => {
-                console.log(
-                    '**************** HELLOOOOOOOO *********************************'
-                );
-                return {
-                    [sample1Id]: [
-                        clinicalDataSampleIdForSample1,
-                        clinicalDataNoWgd,
-                    ],
-                };
+            result: {
+                [sample1Id]: [
+                    clinicalDataSampleIdForSample1,
+                    clinicalDataNoWgd,
+                ],
             },
-        },
-        {}
-    );
+            status: 'complete' as 'complete',
+            peekStatus: 'complete',
+            isPending: false,
+            isError: false,
+            isComplete: true,
+            error: undefined,
+        };
+    // function mockCompletePromise(...)
+    // function mockPendingPromise(...)
 
     console.log('s1NoWgdClinicalDataMap');
     console.log(s1NoWgdClinicalDataMap);
