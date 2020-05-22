@@ -265,11 +265,29 @@ describe('ASCNCopyNumberColumnFormatter', () => {
     //         ),
     // });
 
-    // const s1NoWgdClinicalDataMap: MobxPromise<{[sampleId: string]: ClinicalData[]; }> = remoteData({
-    //   invoke: () => return {[sample1Id]: [clinicalDataSampleIdForSample1, clinicalDataNoWgd]}
-    // });
-    //
-    //
+    const s1NoWgdClinicalDataMap = remoteData(
+        {
+            invoke: () => {
+                console.log(
+                    '**************** HELLOOOOOOOO *********************************'
+                );
+                return {
+                    [sample1Id]: [
+                        clinicalDataSampleIdForSample1,
+                        clinicalDataNoWgd,
+                    ],
+                };
+            },
+        },
+        {}
+    );
+
+    console.log('s1NoWgdClinicalDataMap');
+    console.log(s1NoWgdClinicalDataMap);
+    console.log('s1NoWgdClinicalDataMap.result');
+    console.log(s1NoWgdClinicalDataMap.result);
+    console.log('s1NoWgdClinicalDataMap.status');
+    console.log(s1NoWgdClinicalDataMap.status);
 
     const s1WgdClinicalDataMap: {
         [sampleId: string]: ClinicalData[];
@@ -406,6 +424,7 @@ describe('ASCNCopyNumberColumnFormatter', () => {
         );
         expectElementPropertiesMatch(s1Wrapper, 'NA', '-1', '-1', '-1');
     });
+
     // Single sample tests - with NO_WGD and ASCNCopyNumberValueEnum from each of {'-2','-1','0','1','2','999','NA'}
     it('renders sample1 NoWgd Amp', () => {
         const cellWrapper = mount(s1NoWgdColDef.render(mutations_s1Amp));
@@ -416,7 +435,8 @@ describe('ASCNCopyNumberColumnFormatter', () => {
         );
         expectElementPropertiesMatch(s1Wrapper, 'NO_WGD', '1', '1', '2');
     });
-    it('renders sample1 NoWgd Gain', () => {
+
+    /*it('renders sample1 NoWgd Gain', () => {
         const cellWrapper = mount(s1NoWgdColDef.render(mutations_s1Gain));
         const elementsWrapper = cellWrapper.find('ASCNCopyNumberElement');
         expect(elementsWrapper.length).to.equal(1); // one sample
@@ -959,4 +979,5 @@ describe('ASCNCopyNumberColumnFormatter', () => {
         );
         expectElementPropertiesMatch(s3Wrapper, 'WGD', '1', '1', '-2');
     });
+    */
 });
