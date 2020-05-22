@@ -172,10 +172,6 @@ export default class ASCNCopyNumberColumnFormatter {
                 ? mutation.alleleSpecificCopyNumber.ascnIntegerCopyNumber.toString()
                 : ASCNCopyNumberValueEnum.NA;
         }
-        console.log(
-            'WHAT THE HECK IS sampleIdToClinicalDataMap.status?' +
-                sampleIdToClinicalDataMap.status
-        );
         if (
             sampleIdToClinicalDataMap === undefined ||
             sampleIdToClinicalDataMap.isError
@@ -221,7 +217,6 @@ export default class ASCNCopyNumberColumnFormatter {
                 </>
             );
         } else {
-            console.log('Status is still pending...');
             return loaderIcon('pull-left');
         }
     }

@@ -57,7 +57,6 @@ import CopyNumberCountCache from './CopyNumberCountCache';
 import CancerTypeCache from 'shared/cache/CancerTypeCache';
 import MutationCountCache from 'shared/cache/MutationCountCache';
 import AppConfig from 'appConfig';
-import { delay } from 'q';
 import {
     concatMutationData,
     fetchClinicalData,
