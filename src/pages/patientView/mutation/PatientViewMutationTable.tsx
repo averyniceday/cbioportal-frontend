@@ -74,7 +74,7 @@ export default class PatientViewMutationTable extends MutationTable<
             MutationTableColumnType.VARIANT_TYPE,
             MutationTableColumnType.CLONAL,
             MutationTableColumnType.CANCER_CELL_FRACTION,
-            MutationTableColumnType.MUTANT_COPIES,
+            MutationTableColumnType.EXPECTED_ALT_COPIES,
             MutationTableColumnType.FUNCTIONAL_IMPACT,
             MutationTableColumnType.COSMIC,
             MutationTableColumnType.TUMOR_ALLELE_FREQ,
@@ -179,7 +179,7 @@ export default class PatientViewMutationTable extends MutationTable<
         );
 
         this._columns[
-            MutationTableColumnType.MUTANT_COPIES
+            MutationTableColumnType.EXPECTED_ALT_COPIES
         ] = getDefaultMutantCopiesColumnDefinition(
             this.getSamples(),
             this.props.sampleManager
@@ -287,7 +287,7 @@ export default class PatientViewMutationTable extends MutationTable<
         this._columns[MutationTableColumnType.VARIANT_TYPE].order = 115;
         this._columns[MutationTableColumnType.CLONAL].order = 116;
         this._columns[MutationTableColumnType.CANCER_CELL_FRACTION].order = 117;
-        this._columns[MutationTableColumnType.MUTANT_COPIES].order = 118;
+        this._columns[MutationTableColumnType.EXPECTED_ALT_COPIES].order = 118;
         this._columns[MutationTableColumnType.CENTER].order = 120;
         this._columns[MutationTableColumnType.TUMOR_ALLELE_FREQ].order = 130;
         this._columns[MutationTableColumnType.VAR_READS].order = 140;
@@ -315,7 +315,7 @@ export default class PatientViewMutationTable extends MutationTable<
 
         this._columns[MutationTableColumnType.CLONAL].shouldExclude = () => {
             return !this.anyMutationHasASCNProperty(
-                ASCNAttributes.CCF_M_COPIES_STRING
+                ASCNAttributes.CCF_EXPECTED_COPIES_STRING
             );
         };
 
@@ -331,15 +331,15 @@ export default class PatientViewMutationTable extends MutationTable<
             MutationTableColumnType.CANCER_CELL_FRACTION
         ].shouldExclude = () => {
             return !this.anyMutationHasASCNProperty(
-                ASCNAttributes.CCF_M_COPIES_STRING
+                ASCNAttributes.CCF_EXPECTED_COPIES_STRING
             );
         };
 
         this._columns[
-            MutationTableColumnType.MUTANT_COPIES
+            MutationTableColumnType.EXPECTED_ALT_COPIES
         ].shouldExclude = () => {
             return !this.anyMutationHasASCNProperty(
-                ASCNAttributes.MUTANT_COPIES_STRING
+                ASCNAttributes.EXPECTED_ALT_COPIES_STRING
             );
         };
 

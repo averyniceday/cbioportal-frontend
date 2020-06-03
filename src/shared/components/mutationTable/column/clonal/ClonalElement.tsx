@@ -10,9 +10,9 @@ export enum ClonalColor {
 
 function getClonalColor(clonalValue: string): ClonalColor {
     switch (clonalValue) {
-        case 'yes':
+        case 'CLONAL':
             return ClonalColor.LIMEGREEN;
-        case 'no':
+        case 'SUBCLONAL':
             return ClonalColor.DIMGREY;
         default:
             return ClonalColor.LIGHTGREY;
@@ -22,7 +22,7 @@ function getClonalColor(clonalValue: string): ClonalColor {
 export const ClonalElementTooltip: React.FunctionComponent<{
     sampleId: string;
     clonalValue: string;
-    ccfMCopies: string;
+    ccfExpectedCopies: string;
     sampleManager?: SampleManager | null;
 }> = props => {
     const firstColumnStyle = {
@@ -50,7 +50,7 @@ export const ClonalElementTooltip: React.FunctionComponent<{
             </div>
             <div>
                 <span style={firstColumnStyle}>CCF</span>
-                <strong>{props.ccfMCopies}</strong>
+                <strong>{props.ccfExpectedCopies}</strong>
             </div>
         </div>
     );
@@ -79,7 +79,7 @@ const ClonalCircle: React.FunctionComponent<{
 const ClonalElement: React.FunctionComponent<{
     sampleId: string;
     clonalValue: string;
-    ccfMCopies: string;
+    ccfExpectedCopies: string;
     sampleManager?: SampleManager | null;
 }> = props => {
     if (getClonalColor(props.clonalValue) !== ClonalColor.LIGHTGREY) {
