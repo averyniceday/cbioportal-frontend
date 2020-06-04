@@ -20,7 +20,7 @@ import GeneFilterMenu, { GeneFilterOption } from './GeneFilterMenu';
 import { getDefaultASCNCopyNumberColumnDefinition } from 'shared/components/mutationTable/column/ascnCopyNumber/ASCNCopyNumberColumnFormatter';
 import { getDefaultCancerCellFractionColumnDefinition } from 'shared/components/mutationTable/column/cancerCellFraction/CancerCellFractionColumnFormatter';
 import { getDefaultClonalColumnDefinition } from 'shared/components/mutationTable/column/clonal/ClonalColumnFormatter';
-import { getDefaultMutantCopiesColumnDefinition } from 'shared/components/mutationTable/column/mutantCopies/MutantCopiesColumnFormatter';
+import { getDefaultExpectedAltCopiesColumnDefinition } from 'shared/components/mutationTable/column/expectedAltCopies/ExpectedAltCopiesColumnFormatter';
 import { ASCNAttributes } from 'shared/enums/ASCNEnums';
 
 export interface IPatientViewMutationTableProps extends IMutationTableProps {
@@ -180,7 +180,7 @@ export default class PatientViewMutationTable extends MutationTable<
 
         this._columns[
             MutationTableColumnType.EXPECTED_ALT_COPIES
-        ] = getDefaultMutantCopiesColumnDefinition(
+        ] = getDefaultExpectedAltCopiesColumnDefinition(
             this.getSamples(),
             this.props.sampleManager
         );

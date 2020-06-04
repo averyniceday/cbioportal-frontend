@@ -12,25 +12,26 @@ import {
 describe('ClonalElement', () => {
     const clonalYes = {
         sampleId: 'S001',
-        clonalValue: 'yes',
-        ccfMCopies: '1',
+        clonalValue: 'clonal',
+        ccfExpectedCopies: '1',
     };
 
     const clonalNo = {
         sampleId: 'S002',
-        clonalValue: 'no',
-        ccfMCopies: '0.85',
+        clonalValue: 'subclonal',
+        ccfExpectedCopies: '0.85',
     };
 
     const clonalNA = {
         sampleId: 'S003',
         clonalValue: 'NA',
-        ccfMCopies: 'NA',
+        ccfExpectedCopies: 'NA',
     };
 
     function testExpectedValidClonalElement(
         componentProperties: any,
-        expectedColor: string
+        expectedCircleColor: string,
+        expectedTextColor: string
     ) {
         // check main icon is right color given a clonalValue
         const validClonalElementTest = mount(
@@ -38,7 +39,7 @@ describe('ClonalElement', () => {
         );
         assert.equal(
             validClonalElementTest.find('circle').prop('fill'),
-            expectedColor
+            expectedCircleColor
         );
 
         // check props are correctly passed to tooltip
@@ -73,7 +74,7 @@ describe('ClonalElement', () => {
         assert.isTrue(clonalDiv.exists() && ccfDiv.exists());
         assert.equal(
             (clonalDiv.find('strong').prop('style') as any).color,
-            expectedColor
+            expectedTextColor
         );
         assert.equal(
             clonalDiv.find('strong').text(),
@@ -81,7 +82,7 @@ describe('ClonalElement', () => {
         );
         assert.equal(
             ccfDiv.find('strong').text(),
-            componentProperties['ccfMCopies']
+            componentProperties['ccfExpectedCopies']
         );
     }
 
@@ -101,12 +102,20 @@ describe('ClonalElement', () => {
         );
     }
 
-    it('generates limegreen circle with tooltip for clonal yes', () => {
-        testExpectedValidClonalElement(clonalYes, ClonalColor.LIMEGREEN);
+    it('generates limegreen circle with tooltip for clonal', () => {
+        testExpectedValidClonalElement(
+            clonalYes,
+            ClonalColor.LIMEGREEN,
+            ClonalColor.LIMEGREEN
+        );
     });
 
-    it('generates dimgrey circle with tooltip for clonal no', () => {
-        testExpectedValidClonalElement(clonalNo, ClonalColor.DIMGREY);
+    it('generates white circle with tooltip for subclonal', () => {
+        testExpectedValidClonalElement(
+            clonalNo,
+            ClonalColor.WHITE,
+            ClonalColor.DIMGREY
+        );
     });
 
     it('generates lightgrey circle with tooltip for clonal NA', () => {

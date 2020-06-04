@@ -10,14 +10,17 @@ describe('ClonalColumnFormatter', () => {
         clonalElementProperties: any,
         expectedSampleId: string,
         expectedClonalValue: string,
-        expectedCCFMCopies: string
+        expectedCCFExpectedCopies: string
     ) {
         assert.equal(clonalElementProperties['sampleId'], expectedSampleId);
         assert.equal(
             clonalElementProperties['clonalValue'],
             expectedClonalValue
         );
-        assert.equal(clonalElementProperties['ccfMCopies'], expectedCCFMCopies);
+        assert.equal(
+            clonalElementProperties['ccfExpectedCopies'],
+            expectedCCFExpectedCopies
+        );
     }
 
     function testExpectedNumberOfClonalElements(
@@ -42,7 +45,7 @@ describe('ClonalColumnFormatter', () => {
             },
         });
         delete emptyMutation.alleleSpecificCopyNumber.clonal;
-        delete emptyMutation.alleleSpecificCopyNumber.ccfMCopies;
+        delete emptyMutation.alleleSpecificCopyNumber.ccfExpectedCopies;
         return emptyMutation;
     }
 
@@ -51,16 +54,16 @@ describe('ClonalColumnFormatter', () => {
         initMutation({
             sampleId: 'S001',
             alleleSpecificCopyNumber: {
-                ccfMCopies: 1,
-                clonal: true,
+                ccfExpectedCopies: 1,
+                clonal: 'CLONAL',
             },
         }),
         // Clonal 'no' case
         initMutation({
             sampleId: 'S002',
             alleleSpecificCopyNumber: {
-                ccfMCopies: 0.85,
-                clonal: false,
+                ccfExpectedCopies: 0.85,
+                clonal: 'SUBCLONAL',
             },
         }),
         // Clonal NA case
@@ -102,13 +105,13 @@ describe('ClonalColumnFormatter', () => {
         testExpectedClonalElementProperties(
             sampleToClonalElement['S001'],
             'S001',
-            'yes',
+            'clonal',
             '1'
         );
         testExpectedClonalElementProperties(
             sampleToClonalElement['S002'],
             'S002',
-            'no',
+            'subclonal',
             '0.85'
         );
         testExpectedClonalElementProperties(

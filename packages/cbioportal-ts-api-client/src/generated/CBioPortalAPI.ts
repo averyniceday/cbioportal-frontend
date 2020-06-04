@@ -6,15 +6,15 @@ export type AlleleSpecificCopyNumber = {
 
         'ascnMethod': string
 
-        'ccfMCopies': number
+        'ccfExpectedCopies': number
 
-        'ccfMCopiesUpper': number
+        'ccfExpectedCopiesUpper': number
 
-        'clonal': boolean
+        'clonal': string
 
         'minorCopyNumber': number
 
-        'mutantCopies': number
+        'expectedAltCopies': number
 
         'totalCopyNumber': number
 
@@ -4190,7 +4190,7 @@ export default class CBioPortalAPI {
          * @param {string} projection - Level of detail of the response
          * @param {integer} pageSize - Page size of the result list
          * @param {integer} pageNumber - Page number of the result list
-        
+
          * @param {string} direction - Direction of the sort
     */
     getAllPatientsUsingGETWithHttpInfo(parameters: {
@@ -4255,7 +4255,7 @@ export default class CBioPortalAPI {
          * @param {string} projection - Level of detail of the response
          * @param {integer} pageSize - Page size of the result list
          * @param {integer} pageNumber - Page number of the result list
-        
+
          * @param {string} direction - Direction of the sort
     */
     getAllPatientsUsingGET(parameters: {
@@ -6562,7 +6562,7 @@ export default class CBioPortalAPI {
          * @param {string} projection - Level of detail of the response
          * @param {integer} pageSize - Page size of the result list
          * @param {integer} pageNumber - Page number of the result list
-        
+
          * @param {string} direction - Direction of the sort
     */
     getAllPatientsInStudyUsingGETWithHttpInfo(parameters: {
@@ -6630,7 +6630,7 @@ export default class CBioPortalAPI {
          * @param {string} projection - Level of detail of the response
          * @param {integer} pageSize - Page size of the result list
          * @param {integer} pageNumber - Page number of the result list
-        
+
          * @param {string} direction - Direction of the sort
     */
     getAllPatientsInStudyUsingGET(parameters: {

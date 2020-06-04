@@ -6,14 +6,16 @@ export enum ClonalColor {
     LIMEGREEN = 'limegreen',
     DIMGREY = 'dimgrey',
     LIGHTGREY = 'lightgrey',
+    WHITE = 'white',
 }
 
 function getClonalColor(clonalValue: string): ClonalColor {
     switch (clonalValue) {
-        case 'CLONAL':
+        case 'clonal':
             return ClonalColor.LIMEGREEN;
-        case 'SUBCLONAL':
+        case 'subclonal':
             return ClonalColor.DIMGREY;
+        // Indeterminate/NA falls under this case
         default:
             return ClonalColor.LIGHTGREY;
     }
@@ -65,7 +67,13 @@ const ClonalCircle: React.FunctionComponent<{
                 cx={5}
                 cy={5}
                 r={5}
-                fill={getClonalColor(props.clonalValue)}
+                stroke={getClonalColor(props.clonalValue)}
+                stroke-width={2}
+                fill={
+                    props.clonalValue !== 'subclonal'
+                        ? getClonalColor(props.clonalValue)
+                        : ClonalColor.WHITE
+                }
                 opacity={
                     getClonalColor(props.clonalValue) !== ClonalColor.LIGHTGREY
                         ? 100
@@ -78,7 +86,7 @@ const ClonalCircle: React.FunctionComponent<{
 
 const ClonalElement: React.FunctionComponent<{
     sampleId: string;
-    clonalValue: string;
+    clonalValue: string; //clonal, subclonal, NA
     ccfExpectedCopies: string;
     sampleManager?: SampleManager | null;
 }> = props => {

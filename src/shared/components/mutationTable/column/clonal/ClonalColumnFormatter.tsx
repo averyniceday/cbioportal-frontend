@@ -17,7 +17,6 @@ export enum ClonalValue {
 
 function getClonalValue(mutation: Mutation): ClonalValue {
     let textValue: ClonalValue = ClonalValue.NA;
-    let x = 'YESA';
     if (hasASCNProperty(mutation, 'clonal')) {
         textValue =
             mutation.alleleSpecificCopyNumber.clonal in ClonalValue &&

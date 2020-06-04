@@ -4883,22 +4883,22 @@
         "ascnMethod": {
           "type": "string"
         },
-        "ccfMCopies": {
+        "ccfExpectedCopies": {
           "type": "number",
           "format": "float"
         },
-        "ccfMCopiesUpper": {
+        "ccfExpectedCopiesUpper": {
           "type": "number",
           "format": "float"
         },
         "clonal": {
-          "type": "boolean"
+          "type": "string"
         },
         "minorCopyNumber": {
           "type": "integer",
           "format": "int32"
         },
-        "mutantCopies": {
+        "expectedAltCopies": {
           "type": "integer",
           "format": "int32"
         },

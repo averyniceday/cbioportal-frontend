@@ -40,7 +40,7 @@ export const enum MUTATION_DATA_FIELD_ENUM {
     ASCN_INTEGER_COPY_NUMBER = 'ascnIntegerCopyNumber',
     TOTAL_COPY_NUMBER = 'totalCopyNumber',
     MINOR_COPY_NUMBER = 'minorCopyNumber',
-    MUTANT_COPIES = 'mutantCopies',
+    EXPECTED_ALT_COPIES = 'expectedAltCopies',
 }
 
 /* cbioportal api responses - genetic profile fields and subfields */
