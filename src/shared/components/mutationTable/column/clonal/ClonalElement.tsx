@@ -66,9 +66,9 @@ const ClonalCircle: React.FunctionComponent<{
             <circle
                 cx={5}
                 cy={5}
-                r={5}
+                r={4}
                 stroke={getClonalColor(props.clonalValue)}
-                stroke-width={2}
+                stroke-width={1}
                 fill={
                     props.clonalValue !== 'subclonal'
                         ? getClonalColor(props.clonalValue)

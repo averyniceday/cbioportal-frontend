@@ -2932,8 +2932,8 @@ export class ResultsViewPageStore {
                     this.studies.result!,
                     this.samples.result,
                     [
-                        CLINICAL_ATTRIBUTE_ID_ENUM.FACETS_WGD,
-                        CLINICAL_ATTRIBUTE_ID_ENUM.FACETS_PURITY,
+                        CLINICAL_ATTRIBUTE_ID_ENUM.ASCN_WGD,
+                        CLINICAL_ATTRIBUTE_ID_ENUM.ASCN_PURITY,
                     ]
                 ),
         },
